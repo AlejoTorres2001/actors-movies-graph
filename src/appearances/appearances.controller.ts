@@ -3,43 +3,55 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  ParseIntPipe,
+  Put,
 } from '@nestjs/common';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AppearancesService } from './appearances.service';
 import { CreateAppearanceDto } from './dto/create-appearance.dto';
 import { UpdateAppearanceDto } from './dto/update-appearance.dto';
-
+import { Appearance } from './entities/appearance.entity';
+@ApiTags('appearances')
 @Controller('appearances')
 export class AppearancesController {
   constructor(private readonly appearancesService: AppearancesService) {}
-
+  @ApiCreatedResponse({ type: [Appearance] })
   @Post()
-  create(@Body() createAppearanceDto: CreateAppearanceDto) {
+  create(
+    @Body() createAppearanceDto: CreateAppearanceDto,
+  ): Promise<Appearance> {
     return this.appearancesService.create(createAppearanceDto);
   }
-
+  @ApiCreatedResponse({ type: [Appearance] })
   @Get()
-  findAll() {
+  findAll(): Promise<Appearance[]> {
     return this.appearancesService.findAll();
   }
-
+  @ApiNotFoundResponse()
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.appearancesService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Appearance> {
+    return this.appearancesService.findOne(id);
   }
-
-  @Patch(':id')
+  @ApiNotFoundResponse()
+  @ApiCreatedResponse({ type: Appearance })
+  @ApiBody({ type: UpdateAppearanceDto })
+  @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateAppearanceDto: UpdateAppearanceDto,
-  ) {
-    return this.appearancesService.update(+id, updateAppearanceDto);
+  ): Promise<Appearance> {
+    return this.appearancesService.update(id, updateAppearanceDto);
   }
-
+  @ApiNotFoundResponse()
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.appearancesService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.appearancesService.remove(id);
   }
 }

@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Actor } from 'src/actors/entities/actor.entity';
+import { Movie } from 'src/movies/entities/movies.entity';
 import { Repository } from 'typeorm';
 import { CreateAppearanceDto } from './dto/create-appearance.dto';
 import { UpdateAppearanceDto } from './dto/update-appearance.dto';
@@ -10,24 +12,74 @@ export class AppearancesService {
   constructor(
     @InjectRepository(Appearance)
     private readonly appearanceRepository: Repository<Appearance>,
+    @InjectRepository(Actor)
+    private readonly actorRepository: Repository<Actor>,
+    @InjectRepository(Movie)
+    private readonly movieRepository: Repository<Movie>,
   ) {}
-  create(createAppearanceDto: CreateAppearanceDto) {
-    return 'This action adds a new appearance';
+  async create(createAppearanceDto: CreateAppearanceDto): Promise<Appearance> {
+    const { actorId, movieId } = createAppearanceDto;
+    const actor = await this.actorRepository.findOne({
+      where: { id: actorId },
+    });
+    const movie = await this.movieRepository.findOne({
+      where: { id: movieId },
+    });
+    if (!actor || !movie) {
+      throw new NotFoundException(`Actor or Movie not found.`);
+    }
+    const newAppearance = this.appearanceRepository.create({
+      actor,
+      movie,
+    });
+    return await this.appearanceRepository.save(newAppearance);
   }
 
-  findAll() {
-    return `This action returns all appearances`;
+  async findAll(): Promise<Appearance[]> {
+    return await this.appearanceRepository.find({
+      relations: ['actor', 'movie'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} appearance`;
+  async findOne(id: number): Promise<Appearance> {
+    const foundAppearance = await this.appearanceRepository.findOne({
+      where: { id: id },
+      relations: ['actor', 'movie'],
+    });
+    if (!foundAppearance) {
+      throw new NotFoundException(`Appearance with ID ${id} not found.`);
+    }
+    return foundAppearance;
   }
 
-  update(id: number, updateAppearanceDto: UpdateAppearanceDto) {
-    return `This action updates a #${id} appearance`;
+  async update(id: number, updateAppearanceDto: UpdateAppearanceDto) {
+    const appearance = await this.findOne(id);
+    const { actorId, movieId } = updateAppearanceDto;
+    const actorIdForUpdate = actorId ? actorId : appearance.actor.id;
+    const movieIdForUpdate = movieId ? movieId : appearance.movie.id;
+    const actor = await this.actorRepository.findOne({
+      where: { id: actorIdForUpdate },
+    });
+    const movie = await this.movieRepository.findOne({
+      where: {
+        id: movieIdForUpdate,
+      },
+    });
+    if (!actor || !movie) {
+      throw new NotFoundException(`Actor or Movie not found.`);
+    }
+    appearance.actor = actor;
+    appearance.movie = movie;
+    return await this.appearanceRepository.save(appearance);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} appearance`;
+  async remove(id: number): Promise<void> {
+    const foundAppearance = await this.appearanceRepository.findOne({
+      where: { id: id },
+    });
+    if (!foundAppearance) {
+      throw new NotFoundException(`Appearance with ID ${id} not found.`);
+    }
+    await this.appearanceRepository.delete(id);
   }
 }

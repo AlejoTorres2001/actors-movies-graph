@@ -8,8 +8,8 @@ import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 export class Appearance {
   @PrimaryGeneratedColumn('increment')
   id: number;
-  @ManyToOne(() => Actor, (actor) => actor.appearances)
-  actorId: number;
-  @ManyToOne(() => Movie, (movie) => movie.appearances)
-  movieId: number;
+  @ManyToOne(() => Actor, (actor) => actor.appearances, { onDelete: 'CASCADE' })
+  actor: Actor;
+  @ManyToOne(() => Movie, (movie) => movie.appearances, { onDelete: 'CASCADE' })
+  movie: Movie;
 }
