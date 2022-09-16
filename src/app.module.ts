@@ -13,7 +13,7 @@ import { AppearancesModule } from './appearances/appearances.module';
     }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
-        type: 'mysql',
+        type: 'postgres',
         host: process.env.DB_HOST,
         port: parseInt(process.env.DB_PORT) || 3306,
         username: process.env.DB_USERNAME,
