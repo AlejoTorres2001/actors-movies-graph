@@ -3,7 +3,7 @@ import { IsAlphanumeric, IsNumber, MaxLength } from 'class-validator';
 export class createMovieDto {
   @ApiProperty({ required: true })
   @IsAlphanumeric()
-  @MaxLength(30)
+  @MaxLength(40)
   title: string;
   @ApiProperty({ required: true })
   @IsNumber()

@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateActorDto } from './create-actor.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsAlpha, IsNumber, IsOptional } from 'class-validator';
 
-export class UpdateActorDto extends PartialType(CreateActorDto) {}
+export class UpdateActorDto {
+  @ApiProperty({ required: false })
+  @IsAlpha()
+  @IsOptional()
+  name: string;
+  @ApiProperty({ required: false })
+  @IsNumber()
+  @IsOptional()
+  birthYear: number;
+}
