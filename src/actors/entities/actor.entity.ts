@@ -14,6 +14,6 @@ export class Actor {
   @ApiProperty({ required: true })
   @Column()
   birthYear: number;
-  @OneToMany(() => Appearance, (appearance) => appearance.actorId)
+  @OneToMany(() => Appearance, (appearance) => appearance.actor)
   appearances: Appearance[];
 }
