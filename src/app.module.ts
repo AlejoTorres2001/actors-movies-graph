@@ -3,6 +3,7 @@ import { MoviesModule } from './movies/movies.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ActorsModule } from './actors/actors.module';
+import { AppearancesModule } from './appearances/appearances.module';
 @Module({
   imports: [
     MoviesModule,
@@ -12,9 +13,9 @@ import { ActorsModule } from './actors/actors.module';
     }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
-        type: 'mysql',
+        type: 'postgres',
         host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT) || 3306,
+        port: parseInt(process.env.DB_PORT),
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
@@ -25,6 +26,7 @@ import { ActorsModule } from './actors/actors.module';
       }),
     }),
     ActorsModule,
+    AppearancesModule,
   ],
 })
 export class AppModule {}
