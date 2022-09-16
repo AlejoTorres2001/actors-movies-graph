@@ -18,8 +18,13 @@ export class ActorsService {
 
   async findAll(name?: string): Promise<Actor[]> {
     const foundActors = name
-      ? await this.actorsRepository.find({ where: { name: name } })
-      : await this.actorsRepository.find();
+      ? await this.actorsRepository.find({
+          where: { name: name },
+          relations: ['appearances'],
+        })
+      : await this.actorsRepository.find({
+          relations: ['appearances'],
+        });
     if (!foundActors) {
       throw new NotFoundException(`Actors with name ${name} not found.`);
     }
@@ -31,6 +36,7 @@ export class ActorsService {
       where: {
         id: id,
       },
+      relations: ['appearances'],
     });
     if (!foundActor) {
       throw new NotFoundException(`Actor with ID ${id} not found.`);
