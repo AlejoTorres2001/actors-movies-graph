@@ -14,6 +14,6 @@ export class Movie {
   @ApiProperty({ required: true })
   @Column()
   year: number;
-  @OneToMany(() => Appearance, (appearance) => appearance.movieId)
+  @OneToMany(() => Appearance, (appearance) => appearance.movie)
   appearances: Appearance[];
 }
