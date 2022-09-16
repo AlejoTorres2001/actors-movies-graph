@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Controller, Module } from '@nestjs/common';
 import { MoviesModule } from './movies/movies.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ActorsModule } from './actors/actors.module';
 import { AppearancesModule } from './appearances/appearances.module';
+import { AppController } from './app.controller';
 @Module({
   imports: [
     MoviesModule,
@@ -28,5 +29,6 @@ import { AppearancesModule } from './appearances/appearances.module';
     ActorsModule,
     AppearancesModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
