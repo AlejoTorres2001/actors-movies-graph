@@ -65,8 +65,8 @@ export class AppearancesService {
         id: movieIdForUpdate,
       },
     });
-    if (!actor || !movie) {
-      throw new NotFoundException(`Actor or Movie not found.`);
+    if (!actor || !movie || !appearance) {
+      throw new NotFoundException(`Actor, Movie or Appearance not found.`);
     }
     appearance.actor = actor;
     appearance.movie = movie;
