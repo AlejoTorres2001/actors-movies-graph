@@ -5,27 +5,17 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+El Repositorio cuenta con archivos de configuracion para crear un contenedor de desarrollo utilizando ````Docker````
 
+**Si bien no es obligatorio su uso es recomendado**
+
+**No se incluyen las credenciales de acceso a la base de datos**
+
+**El repositorio cuenta con Pipelines de CI/CD**
+
+El link del Deploy es el siguiente: [https://movies-actors-graph.herokuapp.com/](https://movies-actors-graph.herokuapp.com/)
 ## Installation
 
 ```bash
@@ -45,32 +35,25 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
 
-```bash
-# unit tests
-$ npm run test
+## Secciones de la Docuementacion
 
-# e2e tests
-$ npm run test:e2e
+- [CLI de Nest](https://docs.nestjs.com/cli/usages)
+- [GraphQL en Nest](https://docs.nestjs.com/graphql/quick-start)
+- [OpenAPI y documentacion con Swagger](https://docs.nestjs.com/openapi/introduction)
+- [Relaciones en TypeORM](https://typeorm.io/relations) 
+- [Api Repositorio](https://typeorm.io/repository-api)
+- [Autenticacion](https://docs.nestjs.com/security/authentication)
+## Posts que me resultaron de interes
 
-# test coverage
-$ npm run test:cov
-```
+- [Arquitectura para proyetos de NodeJs](https://dev.to/santypk4/bulletproof-node-js-project-architecture-4epf) En especial arquitectura en 3 capas
 
-## Support
+- [Automapper para desacoplar entidades de controladores y servicios](https://medium.com/@exfabrica/nestjs-dto-with-automapper-c4e89009f30b)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- [Testing Unitario y E2E con Nest](https://medium.com/@exfabrica/nestjs-unit-and-e2e-tests-with-jest-825ba5033c6)
 
-## Stay in touch
+-[NestJs with GraphQL](https://dev.to/tkssharma/nest-js-with-graphql-world-4a27)
+## Material de Interes
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
-
-La seccion 3 Layer Architecture
-https://dev.to/santypk4/bulletproof-node-js-project-architecture-4epf
+- [NestJs Crash Course](https://www.youtube.com/watch?v=2n3xS89TJMI&list=PLlaDAvA2MhR2jb8zavu6I-w1BA878aHcB)
+- [NestJS & PassportJS using JWT](https://www.youtube.com/watch?v=_L225zpUK0M)
