@@ -19,18 +19,34 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { createMovieDto, updateMovieDto } from './dto';
+import { PaginationQueryDto } from 'src/actors/dto';
 @ApiTags('movies')
 @Controller('movies')
 export class MoviesController {
   constructor(private MoviesService: MoviesService) {}
   @ApiCreatedResponse({ type: [Movie] })
   @ApiParam({ name: 'title', type: String, required: false })
+  @ApiParam({
+    name: 'limit',
+    type: Number,
+    required: false,
+    description: 'Limit number of results for pagination',
+  })
+  @ApiParam({
+    name: 'offset',
+    type: Number,
+    required: false,
+    description: 'Offset number of results for pagination',
+  })
   @Get()
-  getMovies(@Query('title') title: string): Promise<Movie[]> {
+  getMovies(
+    @Query('title') title: string,
+    @Query() pagination: PaginationQueryDto,
+  ): Promise<Movie[]> {
     if (title) {
-      return this.MoviesService.findAll(title);
+      return this.MoviesService.findAll(pagination, title);
     }
-    return this.MoviesService.findAll();
+    return this.MoviesService.findAll(pagination);
   }
   @ApiNotFoundResponse()
   @Get(':id')
