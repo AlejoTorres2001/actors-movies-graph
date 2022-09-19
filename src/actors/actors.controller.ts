@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Query,
@@ -18,8 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ActorsService } from './actors.service';
-import { CreateActorDto } from './dto/create-actor.dto';
-import { UpdateActorDto } from './dto/update-actor.dto';
+import { CreateActorDto, UpdateActorDto } from './dto';
 import { Actor } from './entities/actor.entity';
 @ApiTags('actors')
 @Controller('actors')
