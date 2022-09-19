@@ -15,8 +15,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AppearancesService } from './appearances.service';
-import { CreateAppearanceDto } from './dto/create-appearance.dto';
-import { UpdateAppearanceDto } from './dto/update-appearance.dto';
+import { CreateAppearanceDto, UpdateAppearanceDto } from './dto';
 import { Appearance } from './entities/appearance.entity';
 @ApiTags('appearances')
 @Controller('appearances')

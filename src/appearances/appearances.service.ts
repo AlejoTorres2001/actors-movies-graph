@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Actor } from 'src/actors/entities/actor.entity';
 import { Movie } from 'src/movies/entities/movies.entity';
 import { Repository } from 'typeorm';
-import { CreateAppearanceDto } from './dto/create-appearance.dto';
-import { UpdateAppearanceDto } from './dto/update-appearance.dto';
+import { CreateAppearanceDto, UpdateAppearanceDto } from './dto';
 import { Appearance } from './entities/appearance.entity';
 
 @Injectable()
