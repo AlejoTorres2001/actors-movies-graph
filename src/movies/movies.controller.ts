@@ -25,7 +25,12 @@ import { PaginationQueryDto } from 'src/actors/dto';
 export class MoviesController {
   constructor(private MoviesService: MoviesService) {}
   @ApiCreatedResponse({ type: [Movie] })
-  @ApiParam({ name: 'title', type: String, required: false })
+  @ApiParam({
+    name: 'title',
+    type: String,
+    required: false,
+    description: 'Title of the movie',
+  })
   @ApiParam({
     name: 'limit',
     type: Number,
@@ -48,7 +53,15 @@ export class MoviesController {
     }
     return this.MoviesService.findAll(pagination);
   }
-  @ApiNotFoundResponse()
+  @ApiNotFoundResponse({
+    description: 'Movie not found',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'Id of the movie',
+  })
   @Get(':id')
   getMovieById(@Param('id', ParseIntPipe) id: number): Promise<Movie> {
     return this.MoviesService.findById(id);
@@ -58,9 +71,17 @@ export class MoviesController {
   createMovie(@Body() Body: createMovieDto): Promise<Movie> {
     return this.MoviesService.createMovie(Body);
   }
-  @ApiNotFoundResponse()
+  @ApiNotFoundResponse({
+    description: 'Movie not found',
+  })
   @ApiCreatedResponse({ type: Movie })
   @ApiBody({ type: updateMovieDto })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'Id of the movie',
+  })
   @Put(':id')
   updateMovie(
     @Param('id', ParseIntPipe) id: number,
@@ -71,7 +92,15 @@ export class MoviesController {
   @ApiCreatedResponse({
     type: null,
   })
-  @ApiNotFoundResponse()
+  @ApiNotFoundResponse({
+    description: 'Movie not found',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'Id of the movie',
+  })
   @Delete(':id')
   deleteMovie(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.MoviesService.deleteMovie(id);
