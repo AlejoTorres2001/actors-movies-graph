@@ -9,7 +9,6 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { createMovieDto } from './dto/create-movie.dto';
 import { Movie } from './entities/movies.entity';
 import { MoviesService } from './movies.service';
 import {
@@ -19,7 +18,7 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { updateMovieDto } from './dto/update-movie.dto';
+import { createMovieDto, updateMovieDto } from './dto';
 @ApiTags('movies')
 @Controller('movies')
 export class MoviesController {
