@@ -27,8 +27,12 @@ export class ActorsController {
   constructor(private readonly actorsService: ActorsService) {}
   @ApiCreatedResponse({ type: Actor })
   @Post()
-  create(@Body() createActorDto: CreateActorDto): Promise<Actor> {
-    return this.actorsService.create(createActorDto);
+  async create(@Body() createActorDto: CreateActorDto): Promise<Actor> {
+    try {
+      return await this.actorsService.create(createActorDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
   @ApiCreatedResponse({ type: [Actor] })
   @Get()

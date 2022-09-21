@@ -15,12 +15,8 @@ export class ActorsService {
     private readonly actorsRepository: Repository<Actor>,
   ) {}
   async create(createActorDto: CreateActorDto): Promise<Actor> {
-    try {
-      const newActor = this.actorsRepository.create(createActorDto);
-      return await this.actorsRepository.save(newActor);
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    const newActor = this.actorsRepository.create(createActorDto);
+    return await this.actorsRepository.save(newActor);
   }
 
   async findAll({ limit, offset, name }: ActorsQueryDto): Promise<Actor[]> {
