@@ -4,11 +4,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationQueryDto } from 'src/actors/dto';
 import { Actor } from 'src/actors/entities/actor.entity';
 import { Movie } from 'src/movies/entities/movies.entity';
 import { Repository } from 'typeorm';
-import { CreateAppearanceDto, UpdateAppearanceDto } from './dto';
+import {
+  AppearancesQueryDto,
+  CreateAppearanceDto,
+  UpdateAppearanceDto,
+} from './dto';
 import { Appearance } from './entities/appearance.entity';
 
 @Injectable()
@@ -21,9 +24,8 @@ export class AppearancesService {
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
   ) {}
-  async create(createAppearanceDto: CreateAppearanceDto): Promise<Appearance> {
+  async create({ actorId, movieId }: CreateAppearanceDto): Promise<Appearance> {
     try {
-      const { actorId, movieId } = createAppearanceDto;
       const actor = await this.actorRepository.findOne({
         where: { id: actorId },
       });
@@ -43,9 +45,8 @@ export class AppearancesService {
     }
   }
 
-  async findAll(pagination: PaginationQueryDto): Promise<Appearance[]> {
+  async findAll({ limit, offset }: AppearancesQueryDto): Promise<Appearance[]> {
     try {
-      const { limit, offset } = pagination;
       return await this.appearanceRepository.find({
         relations: ['actor', 'movie'],
         skip: offset,

@@ -16,9 +16,13 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { PaginationQueryDto } from 'src/actors/dto';
+
 import { AppearancesService } from './appearances.service';
-import { CreateAppearanceDto, UpdateAppearanceDto } from './dto';
+import {
+  AppearancesQueryDto,
+  CreateAppearanceDto,
+  UpdateAppearanceDto,
+} from './dto';
 import { Appearance } from './entities/appearance.entity';
 @ApiTags('appearances')
 @Controller('appearances')
@@ -33,20 +37,8 @@ export class AppearancesController {
   @ApiCreatedResponse({
     type: Appearance,
   })
-  @ApiParam({
-    name: 'limit',
-    type: Number,
-    required: false,
-    description: 'Limit number of results for pagination',
-  })
-  @ApiParam({
-    name: 'offset',
-    type: Number,
-    required: false,
-    description: 'Offset number of results for pagination',
-  })
   @Get()
-  findAll(@Query() pagination: PaginationQueryDto): Promise<Appearance[]> {
+  findAll(@Query() pagination: AppearancesQueryDto): Promise<Appearance[]> {
     return this.appearancesService.findAll(pagination);
   }
   @ApiNotFoundResponse({
