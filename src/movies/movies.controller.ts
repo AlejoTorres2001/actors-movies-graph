@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -18,43 +20,30 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { createMovieDto, updateMovieDto } from './dto';
-import { PaginationQueryDto } from 'src/actors/dto';
+import { createMovieDto, MoviesQueryDto, updateMovieDto } from './dto';
+
 @ApiTags('movies')
 @Controller('movies')
 export class MoviesController {
   constructor(private MoviesService: MoviesService) {}
   @ApiCreatedResponse({ type: [Movie] })
-  @ApiParam({
-    name: 'title',
-    type: String,
-    required: false,
-    description: 'Title of the movie',
-  })
-  @ApiParam({
-    name: 'limit',
-    type: Number,
-    required: false,
-    description: 'Limit number of results for pagination',
-  })
-  @ApiParam({
-    name: 'offset',
-    type: Number,
-    required: false,
-    description: 'Offset number of results for pagination',
-  })
   @Get()
-  getMovies(
-    @Query('title') title: string,
-    @Query() pagination: PaginationQueryDto,
-  ): Promise<Movie[]> {
-    if (title) {
-      return this.MoviesService.findAll(pagination, title);
+  async getMovies(@Query() pagination: MoviesQueryDto): Promise<Movie[]> {
+    let foundMovies: Movie[];
+    try {
+      foundMovies = await this.MoviesService.findAll(pagination);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
-    return this.MoviesService.findAll(pagination);
+    if (foundMovies.length === 0) {
+      throw new NotFoundException(
+        `Movies with name ${pagination.title} not found.`,
+      );
+    }
+    return foundMovies;
   }
   @ApiNotFoundResponse({
-    description: 'Movie not found',
+    type: NotFoundException,
   })
   @ApiParam({
     name: 'id',
@@ -63,16 +52,29 @@ export class MoviesController {
     description: 'Id of the movie',
   })
   @Get(':id')
-  getMovieById(@Param('id', ParseIntPipe) id: number): Promise<Movie> {
-    return this.MoviesService.findById(id);
+  async getMovieById(@Param('id', ParseIntPipe) id: number): Promise<Movie> {
+    let foundMovie: Movie;
+    try {
+      foundMovie = await this.MoviesService.findById(id);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!foundMovie) {
+      throw new NotFoundException(`Movie with ID ${id} not found.`);
+    }
+    return foundMovie;
   }
   @ApiCreatedResponse({ type: Movie })
   @Post()
-  createMovie(@Body() Body: createMovieDto): Promise<Movie> {
-    return this.MoviesService.createMovie(Body);
+  async createMovie(@Body() Body: createMovieDto): Promise<Movie> {
+    try {
+      return await this.MoviesService.createMovie(Body);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
   @ApiNotFoundResponse({
-    description: 'Movie not found',
+    type: NotFoundException,
   })
   @ApiCreatedResponse({ type: Movie })
   @ApiBody({ type: updateMovieDto })
@@ -83,11 +85,20 @@ export class MoviesController {
     description: 'Id of the movie',
   })
   @Put(':id')
-  updateMovie(
+  async updateMovie(
     @Param('id', ParseIntPipe) id: number,
     @Body() Body: updateMovieDto,
   ): Promise<Movie> {
-    return this.MoviesService.updateMovie(id, Body);
+    let updatedMovie: Movie;
+    try {
+      updatedMovie = await this.MoviesService.updateMovie(id, Body);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!updatedMovie) {
+      throw new NotFoundException(`Movie with ID ${id} not found.`);
+    }
+    return updatedMovie;
   }
   @ApiCreatedResponse({
     type: null,
@@ -102,7 +113,15 @@ export class MoviesController {
     description: 'Id of the movie',
   })
   @Delete(':id')
-  deleteMovie(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.MoviesService.deleteMovie(id);
+  async deleteMovie(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    let removedMovie: Movie;
+    try {
+      removedMovie = await this.MoviesService.deleteMovie(id);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!removedMovie) {
+      throw new NotFoundException(`Movie with ID ${id} not found.`);
+    }
   }
 }

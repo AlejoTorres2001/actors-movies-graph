@@ -8,6 +8,8 @@ import {
   ParseIntPipe,
   Put,
   Query,
+  InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -16,38 +18,54 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { PaginationQueryDto } from 'src/actors/dto';
+
 import { AppearancesService } from './appearances.service';
-import { CreateAppearanceDto, UpdateAppearanceDto } from './dto';
+import {
+  AppearancesQueryDto,
+  CreateAppearanceDto,
+  UpdateAppearanceDto,
+} from './dto';
 import { Appearance } from './entities/appearance.entity';
 @ApiTags('appearances')
 @Controller('appearances')
 export class AppearancesController {
   constructor(private readonly appearancesService: AppearancesService) {}
   @Post()
-  create(
+  async create(
     @Body() createAppearanceDto: CreateAppearanceDto,
   ): Promise<Appearance> {
-    return this.appearancesService.create(createAppearanceDto);
+    let createdAppearance: Appearance;
+    try {
+      createdAppearance = await this.appearancesService.create(
+        createAppearanceDto,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!createdAppearance) {
+      throw new InternalServerErrorException(
+        `actor ${createAppearanceDto.actorId} or movie ${createAppearanceDto.movieId} not found  `,
+      );
+    }
+    return createdAppearance;
   }
   @ApiCreatedResponse({
     type: Appearance,
   })
-  @ApiParam({
-    name: 'limit',
-    type: Number,
-    required: false,
-    description: 'Limit number of results for pagination',
-  })
-  @ApiParam({
-    name: 'offset',
-    type: Number,
-    required: false,
-    description: 'Offset number of results for pagination',
-  })
   @Get()
-  findAll(@Query() pagination: PaginationQueryDto): Promise<Appearance[]> {
-    return this.appearancesService.findAll(pagination);
+  async findAll(
+    @Query() pagination: AppearancesQueryDto,
+  ): Promise<Appearance[]> {
+    let foundAppearances: Appearance[];
+    try {
+      foundAppearances = await this.appearancesService.findAll(pagination);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (foundAppearances.length === 0) {
+      throw new NotFoundException(`no Appearances found.`);
+    }
+    return foundAppearances;
   }
   @ApiNotFoundResponse({
     description: 'The appearance with the given id was not found',
@@ -59,8 +77,17 @@ export class AppearancesController {
     required: true,
     description: 'Id of the appearance',
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Appearance> {
-    return this.appearancesService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Appearance> {
+    let foundAppearance: Appearance;
+    try {
+      foundAppearance = await this.appearancesService.findOne(id);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!foundAppearance) {
+      throw new NotFoundException(`Appearance with ID ${id} not found.`);
+    }
+    return foundAppearance;
   }
   @ApiNotFoundResponse({ description: 'Appearance not found' })
   @ApiCreatedResponse({ type: Appearance })
@@ -72,11 +99,25 @@ export class AppearancesController {
     description: 'Id of the appearance',
   })
   @Put(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAppearanceDto: UpdateAppearanceDto,
   ): Promise<Appearance> {
-    return this.appearancesService.update(id, updateAppearanceDto);
+    let updatedAppearance: Appearance;
+    try {
+      updatedAppearance = await this.appearancesService.update(
+        id,
+        updateAppearanceDto,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!updatedAppearance) {
+      throw new NotFoundException(
+        `Appearance with ID ${id}, Movie with ID ${updateAppearanceDto?.movieId} or Actor ID ${updateAppearanceDto?.actorId} not found.`,
+      );
+    }
+    return updatedAppearance;
   }
   @ApiNotFoundResponse({ description: 'Appearance not found' })
   @ApiParam({
