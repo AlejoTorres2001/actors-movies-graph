@@ -8,6 +8,8 @@ import {
   Query,
   ParseIntPipe,
   Put,
+  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -30,8 +32,19 @@ export class ActorsController {
   }
   @ApiCreatedResponse({ type: [Actor] })
   @Get()
-  findAll(@Query() pagination: ActorsQueryDto): Promise<Actor[]> {
-    return this.actorsService.findAll(pagination);
+  async findAll(@Query() pagination: ActorsQueryDto): Promise<Actor[]> {
+    let foundActors: Actor[];
+    try {
+      foundActors = await this.actorsService.findAll(pagination);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (foundActors.length === 0) {
+      throw new NotFoundException(
+        `Actors with name ${pagination.name} not found.`,
+      );
+    }
+    return foundActors;
   }
   @ApiNotFoundResponse()
   @Get(':id')

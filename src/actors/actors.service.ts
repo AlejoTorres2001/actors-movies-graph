@@ -24,29 +24,22 @@ export class ActorsService {
   }
 
   async findAll({ limit, offset, name }: ActorsQueryDto): Promise<Actor[]> {
-    try {
-      const foundActors = name
-        ? await this.actorsRepository.find({
-            where: { name: Like(`%${name}%`) },
-            relations: ['appearances'],
-            skip: offset,
-            take: limit,
-            order: {
-              id: 'ASC',
-            },
-          })
-        : await this.actorsRepository.find({
-            relations: ['appearances'],
-            skip: offset,
-            take: limit,
-          });
-      if (foundActors.length === 0) {
-        throw new NotFoundException(`Actors with name ${name} not found.`);
-      }
-      return foundActors;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    const foundActors = name
+      ? await this.actorsRepository.find({
+          where: { name: Like(`%${name}%`) },
+          relations: ['appearances'],
+          skip: offset,
+          take: limit,
+          order: {
+            id: 'ASC',
+          },
+        })
+      : await this.actorsRepository.find({
+          relations: ['appearances'],
+          skip: offset,
+          take: limit,
+        });
+    return foundActors;
   }
 
   async findOne(id: number): Promise<Actor> {
