@@ -120,5 +120,8 @@ export class MoviesController {
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
+    if (!removedMovie) {
+      throw new NotFoundException(`Movie with ID ${id} not found.`);
+    }
   }
 }
