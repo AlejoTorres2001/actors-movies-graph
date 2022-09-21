@@ -25,11 +25,4 @@ export class PaginationQueryDto {
   @IsPositive()
   @IsOptional()
   offset: number;
-  @ApiProperty({
-    required: false,
-    type: String,
-    description: 'Title of the movie',
-  })
-  @IsOptional()
-  title: string;
 }
