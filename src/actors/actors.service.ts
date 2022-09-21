@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
-import { CreateActorDto, PaginationQueryDto, UpdateActorDto } from './dto';
+import { ActorsQueryDto, CreateActorDto, UpdateActorDto } from './dto';
 import { Actor } from './entities/actor.entity';
 
 @Injectable()
@@ -23,10 +23,7 @@ export class ActorsService {
     }
   }
 
-  async findAll(
-    { limit, offset }: PaginationQueryDto,
-    name?: string,
-  ): Promise<Actor[]> {
+  async findAll({ limit, offset, name }: ActorsQueryDto): Promise<Actor[]> {
     try {
       const foundActors = name
         ? await this.actorsRepository.find({
@@ -43,7 +40,7 @@ export class ActorsService {
             skip: offset,
             take: limit,
           });
-      if (!foundActors) {
+      if (foundActors.length === 0) {
         throw new NotFoundException(`Actors with name ${name} not found.`);
       }
       return foundActors;
