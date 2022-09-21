@@ -4,8 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-psycopg2-binary = 2.9
-python-decouple = 3.6
+requests = "*"
 [dev-packages]
 
 [requires]

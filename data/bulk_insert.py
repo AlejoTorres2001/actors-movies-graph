@@ -1,49 +1,61 @@
 import os
-from decouple import config
-import psycopg2
-
-DB_HOST=config('DB_HOST')
-DB_NAME=config('DB_NAME')
-DB_PASSWORD=config('DB_PASSWORD')
-DB_USERNAME=config('DB_USERNAME')
-DB_PORT=config('DB_PORT')
-
-conn = psycopg2.connect(
-  host=DB_HOST,
-  database=DB_NAME,
-  user=DB_USERNAME,
-  password=DB_PASSWORD,
-  port=DB_PORT
-)
-cursor=conn.cursor()
+import requests
 
 DATA_DIR='./data/small'
+DEPLOY_URL='https://movies-actors-graph.herokuapp.com'
+dataset_db_actors_id_map={}
+dataset_db_movies_id_map={}
 
 def load_actors():
-  with open(os.path.join(DATA_DIR,'people.csv'), 'r') as f:
+  actors_dataset_path=os.path.join(DATA_DIR,'people.csv')
+  print(f"inserting actors from {actors_dataset_path} through API...")
+  with open(actors_dataset_path, 'r') as f:
+    count=0
     next(f)
     for line in f:
-      id,name,year=line.strip().split(',')
-      name=name.removeprefix('"').removesuffix('"')
-      cursor.execute("INSERT INTO actors VALUES (%s, %s, %s)", (id,name, year))
-      conn.commit()
+      try:
+        id,name,year=line.strip().split(',')
+        name=name.removeprefix('"').removesuffix('"')
+        res = requests.post(f'{DEPLOY_URL}/actors', json={'name':name,'birthYear':int(year)})
+        dataset_db_actors_id_map[id]=res.json()['id']
+        count+=1
+      except Exception as e:
+        print(f"error inserting actor {line}: {e}")
+  print(f"inserted {count} actors!")
+
 def load_movies():
-  with open(os.path.join(DATA_DIR,'movies.csv'), 'r') as f:
+  movies_dataset_path=os.path.join(DATA_DIR,'movies.csv')
+  print(f"inserting movies from {movies_dataset_path} through API...")
+  with open(movies_dataset_path, 'r') as f:
     next(f)
+    count=0
     for line in f:
-      id,title,year=line.strip().split(',')
-      title=title.removeprefix('"').removesuffix('"')
-      cursor.execute("INSERT INTO movies VALUES (%s, %s, %s)", (id,title, year))
-      conn.commit()
+      try:
+        id,title,year=line.strip().split(',')
+        title=title.removeprefix('"').removesuffix('"')
+        res = requests.post(f'{DEPLOY_URL}/movies', json={'title':title,'year':int(year)})
+        dataset_db_movies_id_map[id]=res.json()['id']
+        count+=1
+      except Exception as e:
+        print(f"error inserting movie ${line}: ${e}")
+  print(f"inserted {count} movies!")
 def load_appearances():
-  with open(os.path.join(DATA_DIR,'stars.csv'), 'r') as f:
-    id=0
+  appearances_dataset_path=os.path.join(DATA_DIR,'appearances.csv')
+  print(f"inserting appearances from {appearances_dataset_path} through API...")
+  with open(appearances_dataset_path, 'r') as f:
     next(f)
+    count=0
     for line in f:
-      actor_id,movie_id=line.strip().split(',')
-      cursor.execute("INSERT INTO appearances(id,actor_id,movie_id) VALUES (%s,%s, %s)", (id,actor_id,movie_id))
-      conn.commit()
-      id+=1
+      try:
+        actor_dataset_id,movie_dataset_id=line.strip().split(',')
+        actor_db_id=dataset_db_actors_id_map[actor_dataset_id]
+        movie_db_id=dataset_db_movies_id_map[movie_dataset_id]
+        res = requests.post(f'{DEPLOY_URL}/appearances', json={'actorId':int(actor_db_id),'movieId':int(movie_db_id)})
+        count+=1
+      except Exception as e:
+        print(f"error inserting appearance ${line}: ${e}")
+  print(f"inserted {count} appearances!")
+
 if __name__ == '__main__':
   load_actors()
   load_movies()
