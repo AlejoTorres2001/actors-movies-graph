@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { IsAscii, IsOptional } from 'class-validator';
 import { PaginationQueryDto } from '../../shared/dto/index';
 
 export class ActorsQueryDto extends PaginationQueryDto {
@@ -9,5 +9,6 @@ export class ActorsQueryDto extends PaginationQueryDto {
     type: String,
   })
   @IsOptional()
+  @IsAscii()
   name: string;
 }

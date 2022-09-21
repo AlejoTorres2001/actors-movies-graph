@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsAlphanumeric, IsNumber, MaxLength } from 'class-validator';
+import { IsNumber, MaxLength, IsAscii } from 'class-validator';
 export class createMovieDto {
   @ApiProperty({ required: true })
-  @IsAlphanumeric()
+  @IsAscii()
   @MaxLength(40)
   title: string;
   @ApiProperty({ required: true })

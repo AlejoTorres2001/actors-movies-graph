@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsAlpha, IsNumber, IsOptional } from 'class-validator';
+import { IsAlpha, IsAscii, IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateActorDto {
   @ApiProperty({ required: false })
-  @IsAlpha()
+  @IsAscii()
   @IsOptional()
   name: string;
   @ApiProperty({ required: false })

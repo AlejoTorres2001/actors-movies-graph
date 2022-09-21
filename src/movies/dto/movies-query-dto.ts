@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { IsAscii, IsOptional } from 'class-validator';
 import { PaginationQueryDto } from '../../shared/dto/index';
 
 export class MoviesQueryDto extends PaginationQueryDto {
@@ -8,6 +8,7 @@ export class MoviesQueryDto extends PaginationQueryDto {
     type: String,
     description: 'Title of the movie',
   })
+  @IsAscii()
   @IsOptional()
   title: string;
 }
