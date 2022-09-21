@@ -44,6 +44,7 @@ $ npm run start:prod
 - [Relaciones en TypeORM](https://typeorm.io/relations) 
 - [Api Repositorio](https://typeorm.io/repository-api)
 - [Autenticacion](https://docs.nestjs.com/security/authentication)
+- [Excepciones](https://docs.nestjs.com/exception-filters)
 ## Posts que me resultaron de interes
 
 - [Arquitectura para proyetos de NodeJs](https://dev.to/santypk4/bulletproof-node-js-project-architecture-4epf) En especial arquitectura en 3 capas
@@ -52,7 +53,7 @@ $ npm run start:prod
 
 - [Testing Unitario y E2E con Nest](https://medium.com/@exfabrica/nestjs-unit-and-e2e-tests-with-jest-825ba5033c6)
 
--[NestJs with GraphQL](https://dev.to/tkssharma/nest-js-with-graphql-world-4a27)
+- [NestJs with GraphQL](https://dev.to/tkssharma/nest-js-with-graphql-world-4a27)
 ## Material de Interes
 
 - [NestJs Crash Course](https://www.youtube.com/watch?v=2n3xS89TJMI&list=PLlaDAvA2MhR2jb8zavu6I-w1BA878aHcB)
