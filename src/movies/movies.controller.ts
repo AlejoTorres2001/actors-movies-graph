@@ -25,32 +25,8 @@ import { PaginationQueryDto } from 'src/actors/dto';
 export class MoviesController {
   constructor(private MoviesService: MoviesService) {}
   @ApiCreatedResponse({ type: [Movie] })
-  @ApiParam({
-    name: 'title',
-    type: String,
-    required: false,
-    description: 'Title of the movie',
-  })
-  @ApiParam({
-    name: 'limit',
-    type: Number,
-    required: false,
-    description: 'Limit number of results for pagination',
-  })
-  @ApiParam({
-    name: 'offset',
-    type: Number,
-    required: false,
-    description: 'Offset number of results for pagination',
-  })
   @Get()
-  getMovies(
-    @Query('title') title: string,
-    @Query() pagination: PaginationQueryDto,
-  ): Promise<Movie[]> {
-    if (title) {
-      return this.MoviesService.findAll(pagination, title);
-    }
+  getMovies(@Query() pagination: PaginationQueryDto): Promise<Movie[]> {
     return this.MoviesService.findAll(pagination);
   }
   @ApiNotFoundResponse({

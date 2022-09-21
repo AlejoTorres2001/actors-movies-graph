@@ -14,12 +14,10 @@ export class MoviesService {
     @InjectRepository(Movie)
     private readonly moviesRepository: Repository<Movie>,
   ) {}
-  async findAll(
-    pagination: PaginationQueryDto,
-    title?: string,
-  ): Promise<Movie[]> {
+  async findAll(pagination: PaginationQueryDto): Promise<Movie[]> {
     try {
-      const { limit, offset } = pagination;
+      const { limit, offset, title } = pagination;
+      console.log(limit, offset, title);
       const foundMovies = title
         ? await this.moviesRepository.find({
             where: {
