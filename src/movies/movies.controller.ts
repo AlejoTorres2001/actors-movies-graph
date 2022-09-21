@@ -66,9 +66,9 @@ export class MoviesController {
   }
   @ApiCreatedResponse({ type: Movie })
   @Post()
-  createMovie(@Body() Body: createMovieDto): Promise<Movie> {
+  async createMovie(@Body() Body: createMovieDto): Promise<Movie> {
     try {
-      return this.MoviesService.createMovie(Body);
+      return await this.MoviesService.createMovie(Body);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
