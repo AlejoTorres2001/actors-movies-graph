@@ -17,7 +17,6 @@ export class MoviesService {
   async findAll(pagination: PaginationQueryDto): Promise<Movie[]> {
     try {
       const { limit, offset, title } = pagination;
-      console.log(limit, offset, title);
       const foundMovies = title
         ? await this.moviesRepository.find({
             where: {
