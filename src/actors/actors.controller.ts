@@ -54,8 +54,17 @@ export class ActorsController {
     required: true,
     description: 'Id of the actor',
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Actor> {
-    return this.actorsService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Actor> {
+    let foundActor: Actor;
+    try {
+      foundActor = await this.actorsService.findOne(id);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!foundActor) {
+      throw new NotFoundException(`Actor with ID ${id} not found.`);
+    }
+    return foundActor;
   }
   @ApiNotFoundResponse()
   @ApiCreatedResponse({ type: Actor })

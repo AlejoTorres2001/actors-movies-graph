@@ -43,20 +43,13 @@ export class ActorsService {
   }
 
   async findOne(id: number): Promise<Actor> {
-    try {
-      const foundActor = await this.actorsRepository.findOne({
-        where: {
-          id: id,
-        },
-        relations: ['appearances'],
-      });
-      if (!foundActor) {
-        throw new NotFoundException(`Actor with ID ${id} not found.`);
-      }
-      return foundActor;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    const foundActor = await this.actorsRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: ['appearances'],
+    });
+    return foundActor;
   }
 
   async update(id: number, updateActorDto: UpdateActorDto): Promise<Actor> {
