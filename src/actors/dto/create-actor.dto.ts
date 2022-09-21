@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsAlpha, IsNumber, MaxLength } from 'class-validator';
+import {IsAscii, IsNumber, MaxLength } from 'class-validator';
 export class CreateActorDto {
   @ApiProperty({ required: true })
-  @IsAlpha()
+  @IsAscii()
   @MaxLength(40)
   name: string;
   @ApiProperty({ required: true })
