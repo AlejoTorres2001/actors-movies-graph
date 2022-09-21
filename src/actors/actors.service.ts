@@ -49,18 +49,14 @@ export class ActorsService {
   }
 
   async update(id: number, updateActorDto: UpdateActorDto): Promise<Actor> {
-    try {
-      const updatedActor = await this.actorsRepository.preload({
-        id: id,
-        ...updateActorDto,
-      });
-      if (!updatedActor) {
-        throw new NotFoundException(`Actor with ID ${id} not found.`);
-      }
-      return await this.actorsRepository.save(updatedActor);
-    } catch (error) {
-      throw new InternalServerErrorException(error);
+    const updatedActor = await this.actorsRepository.preload({
+      id: id,
+      ...updateActorDto,
+    });
+    if (!updatedActor) {
+      return undefined;
     }
+    return await this.actorsRepository.save(updatedActor);
   }
 
   async remove(id: number): Promise<void> {

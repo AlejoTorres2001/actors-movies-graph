@@ -80,11 +80,20 @@ export class ActorsController {
     description: 'Id of the actor',
   })
   @Put(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateActorDto: UpdateActorDto,
   ): Promise<Actor> {
-    return this.actorsService.update(id, updateActorDto);
+    let updatedActor: Actor;
+    try {
+      updatedActor = await this.actorsService.update(id, updateActorDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!updatedActor) {
+      throw new NotFoundException(`Actor with ID ${id} not found.`);
+    }
+    return updatedActor;
   }
 
   @Delete(':id')
