@@ -16,7 +16,10 @@ async function bootstrap() {
       },
     }),
   );
-  app.enableCors();
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  });
   const config = new DocumentBuilder()
     .setTitle('Nest API')
     .setVersion('1.0')
