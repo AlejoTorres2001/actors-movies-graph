@@ -103,7 +103,15 @@ export class ActorsController {
     required: true,
     description: 'Id of the actor',
   })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.actorsService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    let removedActor: Actor;
+    try {
+      removedActor = await this.actorsService.remove(id);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!removedActor) {
+      throw new NotFoundException(`Actor with ID ${id} not found.`);
+    }
   }
 }

@@ -59,19 +59,15 @@ export class ActorsService {
     return await this.actorsRepository.save(updatedActor);
   }
 
-  async remove(id: number): Promise<void> {
-    try {
-      const foundActor = await this.actorsRepository.findOne({
-        where: {
-          id: id,
-        },
-      });
-      if (!foundActor) {
-        throw new NotFoundException(`Actor with ID ${id} not found.`);
-      }
-      await this.actorsRepository.delete(id);
-    } catch (error) {
-      throw new InternalServerErrorException(error);
+  async remove(id: number): Promise<Actor> {
+    const foundActor = await this.actorsRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (!foundActor) {
+      return undefined;
     }
+    return await this.actorsRepository.remove(foundActor);
   }
 }
