@@ -4,9 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationQueryDto } from 'src/actors/dto';
 import { Like, Repository } from 'typeorm';
-import { createMovieDto, updateMovieDto } from './dto';
+import { createMovieDto, MoviesQueryDto, updateMovieDto } from './dto';
 import { Movie } from './entities/movies.entity';
 @Injectable()
 export class MoviesService {
@@ -14,9 +13,8 @@ export class MoviesService {
     @InjectRepository(Movie)
     private readonly moviesRepository: Repository<Movie>,
   ) {}
-  async findAll(pagination: PaginationQueryDto): Promise<Movie[]> {
+  async findAll({ limit, offset, title }: MoviesQueryDto): Promise<Movie[]> {
     try {
-      const { limit, offset, title } = pagination;
       const foundMovies = title
         ? await this.moviesRepository.find({
             where: {

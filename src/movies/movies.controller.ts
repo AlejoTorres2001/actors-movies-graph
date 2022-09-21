@@ -18,15 +18,15 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { createMovieDto, updateMovieDto } from './dto';
-import { PaginationQueryDto } from 'src/actors/dto';
+import { createMovieDto, MoviesQueryDto, updateMovieDto } from './dto';
+
 @ApiTags('movies')
 @Controller('movies')
 export class MoviesController {
   constructor(private MoviesService: MoviesService) {}
   @ApiCreatedResponse({ type: [Movie] })
   @Get()
-  getMovies(@Query() pagination: PaginationQueryDto): Promise<Movie[]> {
+  getMovies(@Query() pagination: MoviesQueryDto): Promise<Movie[]> {
     return this.MoviesService.findAll(pagination);
   }
   @ApiNotFoundResponse({
