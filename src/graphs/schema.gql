@@ -18,7 +18,7 @@ type Appearance {
 type Graph {
   actor: Actor!
   id: Int!
-  neightbors: [Neightbor!]!
+  neighbors: [Neighbor!]!
 }
 
 type Movie {
@@ -28,7 +28,7 @@ type Movie {
   year: Int!
 }
 
-type Neightbor {
+type Neighbor {
   actor: Actor!
   movie: Movie!
 }
