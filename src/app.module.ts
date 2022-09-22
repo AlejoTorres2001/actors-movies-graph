@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ActorsModule } from './actors/actors.module';
 import { AppearancesModule } from './appearances/appearances.module';
 import { AppController } from './app.controller';
+import { GraphsModule } from './graphs/graphs.module';
 @Module({
   imports: [
     MoviesModule,
@@ -28,6 +29,7 @@ import { AppController } from './app.controller';
     }),
     ActorsModule,
     AppearancesModule,
+    GraphsModule,
   ],
   controllers: [AppController],
 })
