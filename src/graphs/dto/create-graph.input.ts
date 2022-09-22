@@ -1,1 +1,4 @@
-export class CreateGraphInput {}
+export class CreateGraphInput {
+  actorNameFrom: string;
+  actorNameTo: string;
+}
