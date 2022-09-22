@@ -34,5 +34,5 @@ type Neightbor {
 }
 
 type Query {
-  findOne(id: Float!): Graph!
+  GenerateGraph(actorNameFrom: String!, actorNameTo: String!): Graph!
 }
