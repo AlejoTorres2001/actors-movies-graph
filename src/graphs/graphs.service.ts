@@ -5,6 +5,7 @@ import { Appearance } from 'src/appearances/entities/appearance.entity';
 import { Movie } from 'src/movies/entities/movies.entity';
 import { Repository } from 'typeorm';
 import { CreateGraphInput } from './dto/create-graph.input';
+import { Neighbor } from './entities/neighbor.entity';
 @Injectable()
 export class GraphsService {
   constructor(
@@ -16,28 +17,22 @@ export class GraphsService {
     private readonly movieRepository: Repository<Movie>,
   ) {}
   async GenerateGraph(createGraphInput: CreateGraphInput) {
+    const actorFrom = await this.findActorByName(
+      createGraphInput.actorNameFrom,
+    );
+    const actorTo = await this.findActorByName(createGraphInput.actorNameTo);
+    const pathsFound = await this.BFS(actorFrom, actorTo);
     return {
       id: 1,
-      actor: this.actorRepository.findOneBy({
-        name: createGraphInput.actorNameFrom,
-      }),
-      neighbors: [
-        {
-          actor: this.actorRepository.findOneBy({
-            name: createGraphInput.actorNameTo,
-          }),
-          movies: this.movieRepository.findOneBy({
-            title: 'Apollo 13',
-          }),
-        },
-      ],
+      actor: actorFrom,
+      paths: pathsFound,
     };
   }
   private async getActorNeighbors(actorName: string) {
-    const actor = await this.actorRepository.findOne({
-      where: { name: actorName },
-      relations: ['appearances', 'appearances.movie'],
-    });
+    const actor = await this.findActorByName(actorName, [
+      'appearances',
+      'appearances.movie',
+    ]);
     const neighborsPromiseArray = actor.appearances.map(async (appearance) => {
       const movie = appearance.movie;
       const MovieAppearances = await this.appearanceRepository.find({
@@ -53,5 +48,36 @@ export class GraphsService {
     });
     const neighborsArray = await Promise.all(neighborsPromiseArray);
     return neighborsArray.flat();
+  }
+  private async BFS(actorFrom: Actor, actorTo: Actor) {
+    const pathsFound = [];
+    const explored = new Set();
+    const queue: Neighbor[][] = [[{ actor: actorFrom, movie: null }]];
+    if (actorFrom.id === actorTo.id) {
+      return pathsFound;
+    }
+    while (queue.length > 0) {
+      const path: Neighbor[] = queue.shift();
+      const actor = path[0].actor;
+      if (!explored.has(actor)) {
+        const neighbors = await this.getActorNeighbors(actor.name);
+        for (const neighbor of neighbors) {
+          const newPath = [...path, neighbor];
+          queue.push(newPath);
+          if (neighbor.actor.id === actorTo.id) {
+            pathsFound.push(newPath);
+          }
+        }
+        explored.add(actor);
+      }
+    }
+    return pathsFound;
+  }
+  private async findActorByName(actorName: string, relations: string[] = []) {
+    const actor = await this.actorRepository.findOne({
+      where: { name: actorName },
+      relations: relations,
+    });
+    return actor;
   }
 }
