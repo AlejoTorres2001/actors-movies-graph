@@ -18,7 +18,7 @@ type Appearance {
 type Graph {
   actor: Actor!
   id: Int!
-  neighbors: [Neighbor!]!
+  paths: [[Neighbor!]!]!
 }
 
 type Movie {
@@ -30,7 +30,7 @@ type Movie {
 
 type Neighbor {
   actor: Actor!
-  movie: Movie!
+  movie: Movie
 }
 
 type Query {
