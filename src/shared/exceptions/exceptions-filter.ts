@@ -13,6 +13,10 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
         statusCode: status,
         message,
       });
+      //! log http exception to storage bucket
+    }
+    if (exception instanceof Error) {
+      //! Log Error to StorageBucket
     }
   }
 }

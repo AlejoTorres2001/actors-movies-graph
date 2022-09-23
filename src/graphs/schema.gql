@@ -1,0 +1,38 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Actor {
+  appearances: [Appearance!]!
+  birthYear: String!
+  id: Int!
+  name: String!
+}
+
+type Appearance {
+  actor: Actor!
+  id: Int!
+  movie: Movie!
+}
+
+type Graph {
+  actor: Actor!
+  id: Int!
+  paths: [[Neighbor!]!]!
+}
+
+type Movie {
+  appearances: [Appearance!]!
+  id: Int!
+  title: String!
+  year: Int!
+}
+
+type Neighbor {
+  actor: Actor!
+  movie: Movie
+}
+
+type Query {
+  GenerateGraph(actorNameFrom: String!, actorNameTo: String!): Graph!
+}
