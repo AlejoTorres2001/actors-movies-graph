@@ -5,6 +5,6 @@ import { Field, ObjectType } from '@nestjs/graphql';
 export class Neighbor {
   @Field((type) => Actor)
   actor: Actor;
-  @Field((type) => Movie)
+  @Field((type) => Movie, { nullable: true })
   movie: Movie;
 }

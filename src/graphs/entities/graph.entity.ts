@@ -7,6 +7,6 @@ export class Graph {
   id: number;
   @Field((type) => Actor)
   actor: Actor;
-  @Field((type) => [Neighbor])
-  neighbors: Neighbor[];
+  @Field((type) => [[Neighbor]])
+  paths: Neighbor[][];
 }
