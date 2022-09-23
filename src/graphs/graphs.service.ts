@@ -15,10 +15,43 @@ export class GraphsService {
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
   ) {}
-  GenerateGraph(createGraphInput: CreateGraphInput) {
-    return `This action returns a #${createGraphInput} graph`;
+  async GenerateGraph(createGraphInput: CreateGraphInput) {
+    return {
+      id: 1,
+      actor: this.actorRepository.findOneBy({
+        name: createGraphInput.actorNameFrom,
+      }),
+      neighbors: [
+        {
+          actor: this.actorRepository.findOneBy({
+            name: createGraphInput.actorNameTo,
+          }),
+          movies: this.movieRepository.findOneBy({
+            title: 'Apollo 13',
+          }),
+        },
+      ],
+    };
   }
-  FindActorNeighbors(actorName: string) {
-    return `This action returns a #${actorName} actor`;
+  private async getActorNeighbors(actorName: string) {
+    const actor = await this.actorRepository.findOne({
+      where: { name: actorName },
+      relations: ['appearances', 'appearances.movie'],
+    });
+    const neighborsPromiseArray = actor.appearances.map(async (appearance) => {
+      const movie = appearance.movie;
+      const MovieAppearances = await this.appearanceRepository.find({
+        where: { movie: movie },
+        relations: ['actor', 'movie'],
+      });
+      const neighbors = MovieAppearances.filter(
+        (a: Appearance) => a.actor.id !== actor.id,
+      ).map((a: Appearance) => {
+        return { actor: a.actor, movie: a.movie };
+      });
+      return neighbors;
+    });
+    const neighborsArray = await Promise.all(neighborsPromiseArray);
+    return neighborsArray.flat();
   }
 }
