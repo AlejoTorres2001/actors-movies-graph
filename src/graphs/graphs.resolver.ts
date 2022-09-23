@@ -7,10 +7,17 @@ export class GraphsResolver {
   constructor(private readonly graphsService: GraphsService) {}
 
   @Query((returns) => Graph)
-  GenerateGraph(
+  async GenerateGraph(
     @Args('actorNameFrom') actorNameFrom: string,
     @Args('actorNameTo') actorNameTo: string,
   ) {
-    return this.graphsService.GenerateGraph({ actorNameFrom, actorNameTo });
+    try {
+      return await this.graphsService.GenerateGraph({
+        actorNameFrom,
+        actorNameTo,
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }
