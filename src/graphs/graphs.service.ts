@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Actor } from 'src/actors/entities/actor.entity';
 import { Appearance } from 'src/appearances/entities/appearance.entity';
-import { Movie } from 'src/movies/entities/movies.entity';
 import { Repository } from 'typeorm';
 import { CreateGraphInput } from './dto/create-graph.input';
+import { Graph } from './entities/graph.entity';
 import { Neighbor } from './entities/neighbor.entity';
 @Injectable()
 export class GraphsService {
@@ -13,10 +13,8 @@ export class GraphsService {
     private readonly appearanceRepository: Repository<Appearance>,
     @InjectRepository(Actor)
     private readonly actorRepository: Repository<Actor>,
-    @InjectRepository(Movie)
-    private readonly movieRepository: Repository<Movie>,
   ) {}
-  async GenerateGraph(createGraphInput: CreateGraphInput) {
+  async GenerateGraph(createGraphInput: CreateGraphInput): Promise<Graph> {
     const actorFrom = await this.findActorByName(
       createGraphInput.actorNameFrom,
     );
@@ -28,7 +26,7 @@ export class GraphsService {
       paths: pathsFound,
     };
   }
-  private async getActorNeighbors(actorName: string) {
+  private async getActorNeighbors(actorName: string): Promise<Neighbor[]> {
     const actor = await this.findActorByName(actorName, [
       'appearances',
       'appearances.movie',
@@ -58,7 +56,7 @@ export class GraphsService {
     }
     while (queue.length > 0) {
       const path: Neighbor[] = queue.shift();
-      const actor = path[0].actor;
+      const actor = path[path.length - 1].actor;
       if (!explored.has(actor)) {
         const neighbors = await this.getActorNeighbors(actor.name);
         for (const neighbor of neighbors) {
@@ -73,7 +71,10 @@ export class GraphsService {
     }
     return pathsFound;
   }
-  private async findActorByName(actorName: string, relations: string[] = []) {
+  private async findActorByName(
+    actorName: string,
+    relations: string[] = [],
+  ): Promise<Actor> {
     const actor = await this.actorRepository.findOne({
       where: { name: actorName },
       relations: relations,
