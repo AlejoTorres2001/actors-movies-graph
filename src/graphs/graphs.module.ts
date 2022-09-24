@@ -15,6 +15,8 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), './src/graphs/schema.gql'),
       sortSchema: true,
+      playground: true,
+      introspection: true,
       formatError: (error: GraphQLError) => {
         const graphQLFormattedError: GraphQLFormattedError = {
           message: error.message,
