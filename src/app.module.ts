@@ -26,7 +26,7 @@ import { GraphsModule } from './graphs/graphs.module';
         autoLoadEntities: true,
         synchronize: true, //!only for dev
         extra: {
-          max: 4,
+          max: 3,
         },
       }),
     }),
