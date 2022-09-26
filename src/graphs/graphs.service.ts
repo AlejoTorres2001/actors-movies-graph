@@ -14,7 +14,7 @@ export class GraphsService {
     @InjectRepository(Actor)
     private readonly actorRepository: Repository<Actor>,
   ) {}
-  async GenerateGraph(createGraphInput: CreateGraphInput): Promise<Graph> {
+  async FindPaths(createGraphInput: CreateGraphInput): Promise<Graph> {
     const actorFrom = await this.findActorByName(
       createGraphInput.actorNameFrom,
     );
@@ -22,7 +22,8 @@ export class GraphsService {
     const pathsFound = await this.BFS(actorFrom, actorTo);
     return {
       id: 1,
-      actor: actorFrom,
+      actorFrom: actorFrom,
+      actorTo: actorTo,
       paths: pathsFound,
     };
   }
@@ -55,12 +56,13 @@ export class GraphsService {
       return pathsFound;
     }
     while (queue.length > 0) {
+      if (pathsFound.length >= 2) return pathsFound; // !too expensive to traverse entire graph, need indexes to speed up
       const path: Neighbor[] = queue.shift();
       const actor = path.slice(-1)[0].actor;
       if (!explored.has(actor)) {
         const neighbors = await this.getActorNeighbors(actor.name);
         for (const neighbor of neighbors) {
-          const newPath = [neighbor, ...path];
+          const newPath = [...path, neighbor];
           queue.push(newPath);
           if (neighbor.actor.id === actorTo.id) {
             pathsFound.push(newPath);
