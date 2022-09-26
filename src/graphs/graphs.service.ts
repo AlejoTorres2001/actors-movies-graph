@@ -4,6 +4,7 @@ import { Actor } from 'src/actors/entities/actor.entity';
 import { Appearance } from 'src/appearances/entities/appearance.entity';
 import { Repository } from 'typeorm';
 import { CreateGraphInput } from './dto/create-graph.input';
+import { AdjacencyList } from './entities';
 import { Graph } from './entities/graph.entity';
 import { Neighbor } from './entities/neighbor.entity';
 @Injectable()
@@ -26,6 +27,18 @@ export class GraphsService {
       actorTo: actorTo,
       paths: pathsFound,
     };
+  }
+  async GenerateGraph(): Promise<AdjacencyList[]> {
+    const actors = await this.actorRepository.find({
+      relations: ['appearances', 'appearances.movie'],
+    });
+    const adjacencyList = actors.map(async (actor) => {
+      return {
+        actor: actor,
+        neighbors: await this.getActorNeighbors(actor.name),
+      };
+    });
+    return await Promise.all(adjacencyList);
   }
   private async getActorNeighbors(actorName: string): Promise<Neighbor[]> {
     const actor = await this.findActorByName(actorName, [
@@ -56,7 +69,7 @@ export class GraphsService {
       return pathsFound;
     }
     while (queue.length > 0) {
-      if (pathsFound.length >= 2) return pathsFound; // !too expensive to traverse entire graph, need indexes to speed up
+      //if (pathsFound.length >= 2) return pathsFound; // !too expensive to traverse entire graph, need indexes to speed up
       const path: Neighbor[] = queue.shift();
       const actor = path.slice(-1)[0].actor;
       if (!explored.has(actor)) {
