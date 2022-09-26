@@ -1,4 +1,4 @@
-import { Controller, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MoviesModule } from './movies/movies.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -25,6 +25,9 @@ import { GraphsModule } from './graphs/graphs.module';
         ssl: true,
         autoLoadEntities: true,
         synchronize: true, //!only for dev
+        extra: {
+          max: 4,
+        },
       }),
     }),
     ActorsModule,
