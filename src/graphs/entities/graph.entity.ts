@@ -6,7 +6,9 @@ export class Graph {
   @Field((type) => Int)
   id: number;
   @Field((type) => Actor)
-  actor: Actor;
+  actorFrom: Actor;
+  @Field((type) => Actor)
+  actorTo: Actor;
   @Field((type) => [[Neighbor]])
   paths: Neighbor[][];
 }
