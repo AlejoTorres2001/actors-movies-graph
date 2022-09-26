@@ -1,10 +1,11 @@
 import os
+from dotenv import dotenv_values
 import requests
 import threading
 import time
-
+config = dotenv_values(".env")
 DATA_DIR='./data/small'
-DEPLOY_URL='https://movies-actors-graph.herokuapp.com'
+DEPLOY_URL= config['DEPLOY_URL']
 dataset_db_actors_id_map={}
 dataset_db_movies_id_map={}
 
