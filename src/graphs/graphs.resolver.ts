@@ -7,12 +7,12 @@ export class GraphsResolver {
   constructor(private readonly graphsService: GraphsService) {}
 
   @Query((returns) => Graph)
-  async GenerateGraph(
+  async FindPaths(
     @Args('actorNameFrom') actorNameFrom: string,
     @Args('actorNameTo') actorNameTo: string,
   ) {
     try {
-      return await this.graphsService.GenerateGraph({
+      return await this.graphsService.FindPaths({
         actorNameFrom,
         actorNameTo,
       });
