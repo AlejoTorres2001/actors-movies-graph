@@ -16,7 +16,8 @@ type Appearance {
 }
 
 type Graph {
-  actor: Actor!
+  actorFrom: Actor!
+  actorTo: Actor!
   id: Int!
   paths: [[Neighbor!]!]!
 }
@@ -34,5 +35,5 @@ type Neighbor {
 }
 
 type Query {
-  GenerateGraph(actorNameFrom: String!, actorNameTo: String!): Graph!
+  FindPaths(actorNameFrom: String!, actorNameTo: String!): Graph!
 }
