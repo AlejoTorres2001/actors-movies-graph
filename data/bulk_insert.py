@@ -1,5 +1,7 @@
 import os
 import requests
+import threading
+import time
 
 DATA_DIR='./data/small'
 DEPLOY_URL='https://movies-actors-graph.herokuapp.com'
@@ -40,7 +42,7 @@ def load_movies():
         print(f"error inserting movie ${line}: ${e}")
   print(f"inserted {count} movies!")
 def load_appearances():
-  appearances_dataset_path=os.path.join(DATA_DIR,'appearances.csv')
+  appearances_dataset_path=os.path.join(DATA_DIR,'stars.csv')
   print(f"inserting appearances from {appearances_dataset_path} through API...")
   with open(appearances_dataset_path, 'r') as f:
     next(f)
@@ -57,6 +59,15 @@ def load_appearances():
   print(f"inserted {count} appearances!")
 
 if __name__ == '__main__':
-  load_actors()
-  load_movies()
-  load_appearances()
+  start_time = time.time()
+  t1 = threading.Thread(target=load_actors)
+  t2 = threading.Thread(target=load_movies)
+  t3 = threading.Thread(target=load_appearances)
+  t1.start()
+  t2.start()
+  t1.join()
+  t2.join()
+  t3.start()
+  end_time = time.time()
+  total_time = end_time - start_time
+  print("Total Time Elapsed: ", total_time)
