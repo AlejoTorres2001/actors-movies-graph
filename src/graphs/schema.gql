@@ -9,7 +9,7 @@ type Actor {
   name: String!
 }
 
-type AdjacencyList {
+type AdjacencyListItem {
   actor: Actor!
   neighbors: [Neighbor!]!
 }
@@ -41,5 +41,5 @@ type Neighbor {
 
 type Query {
   FindPaths(actorNameFrom: String!, actorNameTo: String!): Graph!
-  GenerateGraph: [AdjacencyList!]!
+  GenerateGraph: [AdjacencyListItem!]!
 }
