@@ -56,11 +56,11 @@ export class GraphsService {
     }
     while (queue.length > 0) {
       const path: Neighbor[] = queue.shift();
-      const actor = path[path.length - 1].actor;
+      const actor = path.slice(-1)[0].actor;
       if (!explored.has(actor)) {
         const neighbors = await this.getActorNeighbors(actor.name);
         for (const neighbor of neighbors) {
-          const newPath = [...path, neighbor];
+          const newPath = [neighbor, ...path];
           queue.push(newPath);
           if (neighbor.actor.id === actorTo.id) {
             pathsFound.push(newPath);
