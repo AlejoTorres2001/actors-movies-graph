@@ -69,19 +69,20 @@ export class GraphsService {
       return pathsFound;
     }
     while (queue.length > 0) {
-      if (pathsFound.length >= 2) return pathsFound; // !too expensive to traverse entire graph, need indexes to speed up
+      //if (pathsFound.length >= 10) return pathsFound; // !too expensive to traverse entire graph, need indexes to speed up
       const path: Neighbor[] = queue.shift();
       const actor = path.slice(-1)[0].actor;
-      if (!explored.has(actor)) {
+      if (!explored.has(actor.id)) {
         const neighbors = await this.getActorNeighbors(actor.name);
         for (const neighbor of neighbors) {
           const newPath = [...path, neighbor];
-          queue.push(newPath);
           if (neighbor.actor.id === actorTo.id) {
             pathsFound.push(newPath);
+          } else {
+            queue.push(newPath);
           }
         }
-        explored.add(actor);
+        explored.add(actor.id);
       }
     }
     return pathsFound;
