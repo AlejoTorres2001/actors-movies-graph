@@ -91,4 +91,12 @@ export class AppearancesService {
       throw new InternalServerErrorException(error);
     }
   }
+  async createMany(appearances: CreateAppearanceDto[]): Promise<Appearance[]> {
+    const newAppearances = [];
+    for (const appearance of appearances) {
+      const newAppearance = await this.create(appearance);
+      newAppearances.push(newAppearance);
+    }
+    return newAppearances;
+  }
 }

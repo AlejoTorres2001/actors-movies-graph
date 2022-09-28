@@ -130,4 +130,23 @@ export class AppearancesController {
   remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.appearancesService.remove(id);
   }
+  @Post('/many')
+  @ApiCreatedResponse({ type: [Appearance] })
+  @ApiBody({ type: [CreateAppearanceDto] })
+  async createMany(@Body() createAppearanceDto: CreateAppearanceDto[]) {
+    let createdAppearances: Appearance[];
+    try {
+      createdAppearances = await this.appearancesService.createMany(
+        createAppearanceDto,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (createdAppearances.length === 0) {
+      throw new NotFoundException(
+        `no Appearances created. Check if the actors and movies exist`,
+      );
+    }
+    return createdAppearances;
+  }
 }
