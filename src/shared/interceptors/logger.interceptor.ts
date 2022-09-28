@@ -10,14 +10,18 @@ import { tap } from 'rxjs/operators';
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const { method, url, connection } = context.switchToHttp().getRequest();
-    const { statusCode } = context.switchToHttp().getResponse();
-    const now = Date.now();
-    const data = `${method} ${url} ${connection.remoteAddress} ${now} - ${statusCode}`;
-    return next.handle().pipe(
-      tap(() => {
-        console.log(data);
-      }),
-    );
+    if (context.getType() === 'http') {
+      const ctx = context.switchToHttp();
+      const { method, url, connection } = ctx.getRequest();
+      const { statusCode } = ctx.getResponse();
+      const now = Date.now();
+      const data = `${method} ${url} ${connection.remoteAddress} ${now} - ${statusCode}`;
+      return next.handle().pipe(
+        tap(() => {
+          console.log(data);
+        }),
+      );
+    }
+    return next.handle();
   }
 }
