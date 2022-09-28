@@ -61,4 +61,8 @@ export class MoviesService {
     }
     return this.moviesRepository.remove(movieFound);
   }
+  async createMany(movies: createMovieDto[]): Promise<Movie[]> {
+    const newMovies = this.moviesRepository.create(movies);
+    return await this.moviesRepository.save(newMovies);
+  }
 }

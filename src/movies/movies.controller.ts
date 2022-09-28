@@ -19,6 +19,7 @@ import {
   ApiNotFoundResponse,
   ApiParam,
   ApiBody,
+  ApiResponse,
 } from '@nestjs/swagger';
 import { createMovieDto, MoviesQueryDto, updateMovieDto } from './dto';
 
@@ -123,5 +124,20 @@ export class MoviesController {
     if (!removedMovie) {
       throw new NotFoundException(`Movie with ID ${id} not found.`);
     }
+  }
+  @Post('/many')
+  @ApiCreatedResponse({ type: [Movie] })
+  @ApiBody({ type: [createMovieDto] })
+  async CreateMany(@Body() movies: createMovieDto[]): Promise<Movie[]> {
+    let createdMovies: Movie[];
+    try {
+      createdMovies = await this.MoviesService.createMany(movies);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (createdMovies.length === 0) {
+      throw new NotFoundException(`no movies data provided`);
+    }
+    return createdMovies;
   }
 }
