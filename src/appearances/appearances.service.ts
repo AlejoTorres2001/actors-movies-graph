@@ -92,11 +92,16 @@ export class AppearancesService {
     }
   }
   async createMany(appearances: CreateAppearanceDto[]): Promise<Appearance[]> {
-    const newAppearances = [];
-    for (const appearance of appearances) {
-      const newAppearance = await this.create(appearance);
-      newAppearances.push(newAppearance);
-    }
-    return newAppearances;
+    const actors = await this.actorRepository.find();
+    const movies = await this.movieRepository.find();
+    const newAppearances = appearances.map((appearance) => {
+      const actor = actors.find((actor) => actor.id === appearance.actorId);
+      const movie = movies.find((movie) => movie.id === appearance.movieId);
+      return this.appearanceRepository.create({
+        actor,
+        movie,
+      });
+    });
+    return await this.appearanceRepository.save(newAppearances);
   }
 }
