@@ -66,4 +66,8 @@ export class ActorsService {
     }
     return await this.actorsRepository.remove(foundActor);
   }
+  async createMany(actors: CreateActorDto[]): Promise<Actor[]> {
+    const newActors = this.actorsRepository.create(actors);
+    return await this.actorsRepository.save(newActors);
+  }
 }

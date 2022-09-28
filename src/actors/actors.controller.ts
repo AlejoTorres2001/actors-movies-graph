@@ -114,4 +114,19 @@ export class ActorsController {
       throw new NotFoundException(`Actor with ID ${id} not found.`);
     }
   }
+  @Post('/many')
+  @ApiCreatedResponse({ type: [Actor] })
+  @ApiBody({ type: [CreateActorDto] })
+  async createMany(@Body() actors: CreateActorDto[]): Promise<Actor[]> {
+    let createdActors: Actor[];
+    try {
+      createdActors = await this.actorsService.createMany(actors);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (createdActors.length === 0) {
+      throw new NotFoundException(`no Actors data provided`);
+    }
+    return createdActors;
+  }
 }
