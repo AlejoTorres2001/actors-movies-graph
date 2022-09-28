@@ -69,7 +69,6 @@ export class GraphsService {
       return pathsFound;
     }
     while (queue.length > 0) {
-      //if (pathsFound.length >= 10) return pathsFound; // !too expensive to traverse entire graph, need indexes to speed up
       const path: Neighbor[] = queue.shift();
       const actor = path.slice(-1)[0].actor;
       if (!explored.has(actor.id)) {
