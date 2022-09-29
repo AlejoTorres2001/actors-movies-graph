@@ -6,6 +6,9 @@ import { ActorsModule } from './actors/actors.module';
 import { AppearancesModule } from './appearances/appearances.module';
 import { AppController } from './app.controller';
 import { GraphsModule } from './graphs/graphs.module';
+import { ApiLog } from './shared/entities/api-log.entity';
+import { LoggingInterceptor } from './shared/interceptors/logger.interceptor';
+import { ApiTimeOutInterceptor } from './shared/interceptors/api-timeout.interceptor';
 
 @Module({
   imports: [
@@ -34,7 +37,18 @@ import { GraphsModule } from './graphs/graphs.module';
     ActorsModule,
     AppearancesModule,
     GraphsModule,
+    TypeOrmModule.forFeature([ApiLog]),
   ],
   controllers: [AppController],
+  providers: [
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: LoggingInterceptor,
+    },
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: ApiTimeOutInterceptor,
+    },
+  ],
 })
 export class AppModule {}
