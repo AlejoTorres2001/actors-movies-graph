@@ -9,7 +9,9 @@ import { GraphsModule } from './graphs/graphs.module';
 import { ApiLog } from './shared/entities/api-log.entity';
 import { LoggingInterceptor } from './shared/interceptors/logger.interceptor';
 import { ApiTimeOutInterceptor } from './shared/interceptors/api-timeout.interceptor';
-
+import { Exception } from './shared/entities/exception.entity';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from './shared/exceptions/exceptions-filter';
 @Module({
   imports: [
     MoviesModule,
@@ -38,6 +40,7 @@ import { ApiTimeOutInterceptor } from './shared/interceptors/api-timeout.interce
     AppearancesModule,
     GraphsModule,
     TypeOrmModule.forFeature([ApiLog]),
+    TypeOrmModule.forFeature([Exception]),
   ],
   controllers: [AppController],
   providers: [
@@ -48,6 +51,10 @@ import { ApiTimeOutInterceptor } from './shared/interceptors/api-timeout.interce
     {
       provide: 'APP_INTERCEPTOR',
       useClass: ApiTimeOutInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
     },
   ],
 })
