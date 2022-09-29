@@ -1,4 +1,5 @@
 import { Resolver, Query, Args } from '@nestjs/graphql';
+import { GraphQLError } from 'graphql';
 import { AdjacencyListItem, Graph } from './entities';
 import { GraphsService } from './graphs.service';
 @Resolver((of) => Graph)
@@ -16,7 +17,7 @@ export class GraphsResolver {
         actorNameTo,
       });
     } catch (error) {
-      throw new Error(error);
+      throw new GraphQLError(error.message);
     }
   }
   @Query((returns) => [AdjacencyListItem])
@@ -24,7 +25,7 @@ export class GraphsResolver {
     try {
       return await this.graphsService.GenerateGraph();
     } catch (error) {
-      throw new Error(error);
+      throw new GraphQLError(error);
     }
   }
 }
