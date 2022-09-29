@@ -12,6 +12,8 @@ export class ApiLog {
   @Column()
   ip: string;
   @Column()
+  hostName: string;
+  @Column()
   statusCode: number;
   @Column()
   reqTransportLayerProtocol: string;
@@ -21,4 +23,10 @@ export class ApiLog {
   reqQuery: string;
   @Column()
   throughputTime: number;
+  @Column()
+  date: Date;
+  @Column({ nullable: true })
+  exceptionMessage?: string;
+  @Column({ nullable: true })
+  exceptionName?: string;
 }
