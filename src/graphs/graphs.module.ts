@@ -17,9 +17,14 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
       sortSchema: true,
       playground: true,
       introspection: true,
+      context: ({ req, res }) => ({ req, res }),
       formatError: (error: GraphQLError) => {
         const graphQLFormattedError: GraphQLFormattedError = {
           message: error.message,
+          path: error.path,
+          extensions: {
+            code: error.extensions?.code,
+          },
         };
         return graphQLFormattedError;
       },
