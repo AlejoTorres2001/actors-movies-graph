@@ -5,7 +5,7 @@ import threading
 import time
 config = dotenv_values(".env")
 DATA_DIR='./data/small'
-DEPLOY_URL= config['DEPLOY_URL']
+DEPLOY_URL= config['DEV_URL']
 dataset_db_actors_id_map={}
 dataset_db_movies_id_map={}
 def load_actors():
@@ -18,9 +18,13 @@ def load_actors():
       count=0
       next(f)
       for line in f:
-        id,name,year=line.strip().split(',')
+        line=line.strip().split(',')
+        id = line[0]
+        name = line[1]
         name=name.removeprefix('"').removesuffix('"')
-        actors_rows.append({'name':name,'birthYear':int(year)})
+        year = line[2] if (len(line) == 3 and line[2] != '') else 0
+        actors_rows.append({'name':name,'birthYear':int(year
+        )})
         dataset_id_name_holder[name]=id
     res = requests.post(f'{DEPLOY_URL}/actors/many', json=actors_rows)
     res_data = res.json()
@@ -31,6 +35,7 @@ def load_actors():
     print(f"inserted {count} actors!")
   except Exception as e:
     print(f"error inserting actors: {e}")
+    print(actor)
 
 def load_actors_sequentially():
   actors_dataset_path=os.path.join(DATA_DIR,'people.csv')
@@ -40,8 +45,11 @@ def load_actors_sequentially():
     next(f)
     for line in f:
       try:
-        id,name,year=line.strip().split(',')
+        line=line.strip().split(',')
+        id = line[0]
+        name = line[1]
         name=name.removeprefix('"').removesuffix('"')
+        year = line[2] if (len(line) == 3 and line[2] != '') else 0
         res = requests.post(f'{DEPLOY_URL}/actors', json={'name':name,'birthYear':int(year)})
         dataset_db_actors_id_map[id]=res.json()['id']
         count+=1
@@ -58,8 +66,11 @@ def load_movies():
       next(f)
       count=0
       for line in f:
-        id,title,year=line.strip().split(',')
+        line=line.strip().split(',')
+        id = line[0]
+        title = line[1]
         title=title.removeprefix('"').removesuffix('"')
+        year = line[2] if (len(line) == 3 and line[2] != '') else 0
         movies_rows.append({'title':title,'year':int(year)})
         dataset_id_title_holder[title]=id
       res = requests.post(f'{DEPLOY_URL}/movies/many', json=movies_rows)
@@ -80,8 +91,11 @@ def load_movies_sequentially():
     count=0
     for line in f:
       try:
-        id,title,year=line.strip().split(',')
+        line=line.strip().split(',')
+        id = line[0]
+        title = line[1]
         title=title.removeprefix('"').removesuffix('"')
+        year = line[2] if (len(line) == 3 and line[2] != '') else 0
         res = requests.post(f'{DEPLOY_URL}/movies', json={'title':title,'year':int(year)})
         dataset_db_movies_id_map[id]=res.json()['id']
         count+=1
