@@ -18,7 +18,6 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
   }
   catch(exception: unknown, host: ArgumentsHost) {
     if (exception instanceof HttpException) {
-      console.log('http');
       const start = Date.now();
       const ctx = host.switchToHttp();
       const response = ctx.getResponse<Response>();
