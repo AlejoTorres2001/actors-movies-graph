@@ -74,15 +74,11 @@ export class AppearancesService implements AppearancesServiceInterface {
   }
 
   async remove(id: number): Promise<Appearance> {
-    try {
-      const foundAppearance = await this.appearancesRepository.findOneById(id);
-      if (!foundAppearance) {
-        throw new NotFoundException(`Appearance with ID ${id} not found.`);
-      }
-      return await this.appearancesRepository.remove(foundAppearance);
-    } catch (error) {
-      throw new InternalServerErrorException(error);
+    const foundAppearance = await this.appearancesRepository.findOneById(id);
+    if (!foundAppearance) {
+      return undefined;
     }
+    return await this.appearancesRepository.remove(foundAppearance);
   }
   async createMany(appearances: CreateAppearanceDto[]): Promise<Appearance[]> {
     const actors = await this.actorsRepository.findAll();
