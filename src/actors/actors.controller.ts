@@ -10,6 +10,7 @@ import {
   Put,
   NotFoundException,
   InternalServerErrorException,
+  Inject,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -18,13 +19,16 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { ActorsService } from './actors.service';
 import { ActorsQueryDto, CreateActorDto, UpdateActorDto } from './dto';
 import { Actor } from './entities/actor.entity';
+import { ActorsServiceInterface } from './interfaces/actors.service.interface';
 @ApiTags('actors')
 @Controller('actors')
 export class ActorsController {
-  constructor(private readonly actorsService: ActorsService) {}
+  constructor(
+    @Inject('ActorsServiceInterface')
+    private readonly actorsService: ActorsServiceInterface,
+  ) {}
   @ApiCreatedResponse({ type: Actor })
   @Post()
   async create(@Body() createActorDto: CreateActorDto): Promise<Actor> {
