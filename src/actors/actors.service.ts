@@ -58,6 +58,6 @@ export class ActorsService implements ActorsServiceInterface {
   }
   async createMany(actors: CreateActorDto[]): Promise<Actor[]> {
     const newActors = this.actorsRepository.createMany(actors);
-    return await this.actorsRepository.SaveMany(newActors);
+    return await this.actorsRepository.saveMany(newActors);
   }
 }
