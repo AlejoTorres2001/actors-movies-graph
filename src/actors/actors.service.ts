@@ -1,14 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Inject, Injectable } from '@nestjs/common';
+import { Like } from 'typeorm';
 import { ActorsQueryDto, CreateActorDto, UpdateActorDto } from './dto';
 import { Actor } from './entities/actor.entity';
+import { ActorRepositoryInterface } from './interfaces/actors.repository.interface';
+import { ActorsServiceInterface } from './interfaces/actors.service.interface';
 
 @Injectable()
-export class ActorsService {
+export class ActorsService implements ActorsServiceInterface {
   constructor(
-    @InjectRepository(Actor)
-    private readonly actorsRepository: Repository<Actor>,
+    @Inject('ActorRepositoryInterface')
+    private readonly actorsRepository: ActorRepositoryInterface,
   ) {}
   async create(createActorDto: CreateActorDto): Promise<Actor> {
     const newActor = this.actorsRepository.create(createActorDto);
@@ -17,7 +18,7 @@ export class ActorsService {
 
   async findAll({ limit, offset, name }: ActorsQueryDto): Promise<Actor[]> {
     const foundActors = name
-      ? await this.actorsRepository.find({
+      ? await this.actorsRepository.findAll({
           where: { name: Like(`%${name}%`) },
           skip: offset,
           take: limit,
@@ -25,7 +26,7 @@ export class ActorsService {
             id: 'ASC',
           },
         })
-      : await this.actorsRepository.find({
+      : await this.actorsRepository.findAll({
           skip: offset,
           take: limit,
         });
@@ -33,11 +34,7 @@ export class ActorsService {
   }
 
   async findOne(id: number): Promise<Actor> {
-    const foundActor = await this.actorsRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
+    const foundActor = await this.actorsRepository.findOneById(id);
     return foundActor;
   }
 
@@ -53,18 +50,14 @@ export class ActorsService {
   }
 
   async remove(id: number): Promise<Actor> {
-    const foundActor = await this.actorsRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
+    const foundActor = await this.actorsRepository.findOneById(id);
     if (!foundActor) {
       return undefined;
     }
     return await this.actorsRepository.remove(foundActor);
   }
   async createMany(actors: CreateActorDto[]): Promise<Actor[]> {
-    const newActors = this.actorsRepository.create(actors);
-    return await this.actorsRepository.save(newActors);
+    const newActors = this.actorsRepository.createMany(actors);
+    return await this.actorsRepository.SaveMany(newActors);
   }
 }
