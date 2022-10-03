@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   InternalServerErrorException,
   NotFoundException,
   Param,
@@ -22,11 +23,15 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { createMovieDto, MoviesQueryDto, updateMovieDto } from './dto';
+import { MoviesServiceInterface } from './interfaces/movies.service.interface';
 
 @ApiTags('movies')
 @Controller('movies')
 export class MoviesController {
-  constructor(private MoviesService: MoviesService) {}
+  constructor(
+    @Inject('MovieServiceInterface')
+    private MoviesService: MoviesServiceInterface,
+  ) {}
   @ApiCreatedResponse({ type: [Movie] })
   @Get()
   async getMovies(@Query() pagination: MoviesQueryDto): Promise<Movie[]> {
@@ -56,7 +61,7 @@ export class MoviesController {
   async getMovieById(@Param('id', ParseIntPipe) id: number): Promise<Movie> {
     let foundMovie: Movie;
     try {
-      foundMovie = await this.MoviesService.findById(id);
+      foundMovie = await this.MoviesService.findOne(id);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -69,7 +74,7 @@ export class MoviesController {
   @Post()
   async createMovie(@Body() Body: createMovieDto): Promise<Movie> {
     try {
-      return await this.MoviesService.createMovie(Body);
+      return await this.MoviesService.create(Body);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -92,7 +97,7 @@ export class MoviesController {
   ): Promise<Movie> {
     let updatedMovie: Movie;
     try {
-      updatedMovie = await this.MoviesService.updateMovie(id, Body);
+      updatedMovie = await this.MoviesService.update(id, Body);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -117,7 +122,7 @@ export class MoviesController {
   async deleteMovie(@Param('id', ParseIntPipe) id: number): Promise<void> {
     let removedMovie: Movie;
     try {
-      removedMovie = await this.MoviesService.deleteMovie(id);
+      removedMovie = await this.MoviesService.remove(id);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
