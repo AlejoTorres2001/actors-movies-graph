@@ -10,6 +10,7 @@ import {
   Query,
   InternalServerErrorException,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -26,10 +27,14 @@ import {
   UpdateAppearanceDto,
 } from './dto';
 import { Appearance } from './entities/appearance.entity';
+import { AppearancesServiceInterface } from './interfaces/apperances.service.interface';
 @ApiTags('appearances')
 @Controller('appearances')
 export class AppearancesController {
-  constructor(private readonly appearancesService: AppearancesService) {}
+  constructor(
+    @Inject('AppearancesServiceInterface')
+    private readonly appearancesService: AppearancesServiceInterface,
+  ) {}
   @Post()
   async create(
     @Body() createAppearanceDto: CreateAppearanceDto,
@@ -127,8 +132,16 @@ export class AppearancesController {
     description: 'Id of the appearance',
   })
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.appearancesService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    let removedAppearance: Appearance;
+    try {
+      removedAppearance = await this.appearancesService.remove(id);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!removedAppearance) {
+      throw new NotFoundException(`Actor with ID ${id} not found.`);
+    }
   }
   @Post('/many')
   @ApiCreatedResponse({ type: [Appearance] })
