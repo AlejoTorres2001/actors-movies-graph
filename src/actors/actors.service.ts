@@ -19,7 +19,6 @@ export class ActorsService {
     const foundActors = name
       ? await this.actorsRepository.find({
           where: { name: Like(`%${name}%`) },
-          relations: ['appearances'],
           skip: offset,
           take: limit,
           order: {
@@ -27,7 +26,6 @@ export class ActorsService {
           },
         })
       : await this.actorsRepository.find({
-          relations: ['appearances'],
           skip: offset,
           take: limit,
         });
@@ -39,7 +37,6 @@ export class ActorsService {
       where: {
         id: id,
       },
-      relations: ['appearances'],
     });
     return foundActor;
   }

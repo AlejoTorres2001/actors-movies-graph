@@ -15,12 +15,10 @@ export class MoviesService {
           where: {
             title: Like(`%${title}%`),
           },
-          relations: ['appearances'],
           skip: offset,
           take: limit,
         })
       : await this.moviesRepository.find({
-          relations: ['appearances'],
           skip: offset,
           take: limit,
         });
@@ -31,7 +29,6 @@ export class MoviesService {
       where: {
         id: id,
       },
-      relations: ['appearances'],
     });
     return foundMovie;
   }
