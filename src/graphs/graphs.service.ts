@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Actor } from 'src/actors/entities/actor.entity';
 import { Appearance } from 'src/appearances/entities/appearance.entity';
+import { Movie } from 'src/movies/entities/movies.entity';
 import { Repository } from 'typeorm';
 import { CreateGraphInput } from './dto/create-graph.input';
 import { AdjacencyListItem } from './entities';
@@ -14,8 +15,10 @@ export class GraphsService {
     private readonly appearanceRepository: Repository<Appearance>,
     @InjectRepository(Actor)
     private readonly actorRepository: Repository<Actor>,
+    @InjectRepository(Movie)
+    private readonly movieRepository: Repository<Movie>,
   ) {}
-  async FindPaths(createGraphInput: CreateGraphInput): Promise<Graph> {
+  async findPaths(createGraphInput: CreateGraphInput): Promise<Graph> {
     const actorFrom = await this.findActorByName(
       createGraphInput.actorNameFrom,
     );
@@ -28,7 +31,7 @@ export class GraphsService {
       paths: pathsFound,
     };
   }
-  async GenerateGraph(): Promise<AdjacencyListItem[]> {
+  async generateGraph(): Promise<AdjacencyListItem[]> {
     const actors = await this.actorRepository.find({
       relations: ['appearances', 'appearances.movie'],
     });
@@ -95,5 +98,35 @@ export class GraphsService {
       relations: relations,
     });
     return actor;
+  }
+  private async findMovieByTitle(
+    movieTitle: string,
+    relations: string[] = [],
+  ): Promise<Movie> {
+    const movie = await this.movieRepository.findOne({
+      where: { title: movieTitle },
+      relations: relations,
+    });
+    return movie;
+  }
+  async getActorMovies(actorName: string): Promise<Movie[]> {
+    const actor = await this.findActorByName(actorName, [
+      'appearances',
+      'appearances.movie',
+    ]);
+    if (!actor) {
+      return [];
+    }
+    return actor.appearances.map((a) => a.movie);
+  }
+  async getMovieActors(movieTitle: string): Promise<Actor[]> {
+    const movie = await this.findMovieByTitle(movieTitle, [
+      'appearances',
+      'appearances.actor',
+    ]);
+    if (!movie) {
+      return [];
+    }
+    return movie.appearances.map((a) => a.actor);
   }
 }

@@ -1,5 +1,7 @@
 import { Resolver, Query, Args } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
+import { Actor } from 'src/actors/entities/actor.entity';
+import { Movie } from 'src/movies/entities/movies.entity';
 import { AdjacencyListItem, Graph } from './entities';
 import { GraphsService } from './graphs.service';
 @Resolver((of) => Graph)
@@ -7,12 +9,12 @@ export class GraphsResolver {
   constructor(private readonly graphsService: GraphsService) {}
 
   @Query((returns) => Graph)
-  async FindPaths(
+  async findPaths(
     @Args('actorNameFrom') actorNameFrom: string,
     @Args('actorNameTo') actorNameTo: string,
   ) {
     try {
-      return await this.graphsService.FindPaths({
+      return await this.graphsService.findPaths({
         actorNameFrom,
         actorNameTo,
       });
@@ -21,11 +23,37 @@ export class GraphsResolver {
     }
   }
   @Query((returns) => [AdjacencyListItem])
-  async GenerateGraph() {
+  async generateGraph() {
     try {
-      return await this.graphsService.GenerateGraph();
+      return await this.graphsService.generateGraph();
     } catch (error) {
-      throw new GraphQLError(error);
+      throw new GraphQLError(error.message);
     }
+  }
+  @Query((returns) => [Movie])
+  async getActorMovies(@Args('actorName') actorName: string) {
+    let movies: Movie[];
+    try {
+      movies = await this.graphsService.getActorMovies(actorName);
+    } catch (error) {
+      throw new GraphQLError(error.message);
+    }
+    if (movies.length === 0) {
+      throw new GraphQLError('Actor not found');
+    }
+    return movies;
+  }
+  @Query((returns) => [Actor])
+  async getMovieActors(@Args('movieTitle') movieTitle: string) {
+    let actors: Actor[];
+    try {
+      actors = await this.graphsService.getMovieActors(movieTitle);
+    } catch (error) {
+      throw new GraphQLError(error.message);
+    }
+    if (actors.length === 0) {
+      throw new GraphQLError('Movie not found');
+    }
+    return actors;
   }
 }

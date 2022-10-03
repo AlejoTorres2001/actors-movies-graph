@@ -40,6 +40,8 @@ type Neighbor {
 }
 
 type Query {
-  FindPaths(actorNameFrom: String!, actorNameTo: String!): Graph!
-  GenerateGraph: [AdjacencyListItem!]!
+  findPaths(actorNameFrom: String!, actorNameTo: String!): Graph!
+  generateGraph: [AdjacencyListItem!]!
+  getActorMovies(actorName: String!): [Movie!]!
+  getMovieActors(movieTitle: String!): [Actor!]!
 }
