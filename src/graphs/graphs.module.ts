@@ -9,6 +9,9 @@ import { Appearance } from 'src/appearances/entities/appearance.entity';
 import { Actor } from 'src/actors/entities/actor.entity';
 import { Movie } from 'src/movies/entities/movies.entity';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
+import { AppearancesRepository } from 'src/shared/repositories/appearances.repository';
+import { ActorsRepository } from 'src/shared/repositories/actors.repository';
+import { MoviesRepository } from 'src/shared/repositories/movies.repository';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -31,6 +34,24 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
     }),
     TypeOrmModule.forFeature([Appearance, Actor, Movie]),
   ],
-  providers: [GraphsResolver, GraphsService],
+  providers: [
+    GraphsResolver,
+    {
+      provide: 'GraphsServiceInterface',
+      useClass: GraphsService,
+    },
+    {
+      provide: 'AppearancesRepositoryInterface',
+      useClass: AppearancesRepository,
+    },
+    {
+      provide: 'ActorRepositoryInterface',
+      useClass: ActorsRepository,
+    },
+    {
+      provide: 'MovieRepositoryInterface',
+      useClass: MoviesRepository,
+    },
+  ],
 })
 export class GraphsModule {}

@@ -1,22 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable } from '@nestjs/common';
 import { Actor } from 'src/actors/entities/actor.entity';
+import { ActorRepositoryInterface } from 'src/actors/interfaces/actors.repository.interface';
 import { Appearance } from 'src/appearances/entities/appearance.entity';
+import { AppearancesRepositoryInterface } from 'src/appearances/interfaces/apperances.repository.interface';
 import { Movie } from 'src/movies/entities/movies.entity';
-import { Repository } from 'typeorm';
+import { MoviesRepositoryInterface } from 'src/movies/interfaces/movies.repository.interface';
 import { CreateGraphInput } from './dto/create-graph.input';
 import { AdjacencyListItem } from './entities';
 import { Graph } from './entities/graph.entity';
 import { Neighbor } from './entities/neighbor.entity';
+import { GraphsServiceInterface } from './interfaces/graphs.service.interface';
 @Injectable()
-export class GraphsService {
+export class GraphsService implements GraphsServiceInterface {
   constructor(
-    @InjectRepository(Appearance)
-    private readonly appearanceRepository: Repository<Appearance>,
-    @InjectRepository(Actor)
-    private readonly actorRepository: Repository<Actor>,
-    @InjectRepository(Movie)
-    private readonly movieRepository: Repository<Movie>,
+    @Inject('AppearancesRepositoryInterface')
+    private readonly appearancesRepository: AppearancesRepositoryInterface,
+    @Inject('ActorRepositoryInterface')
+    private readonly actorsRepository: ActorRepositoryInterface,
+    @Inject('MovieRepositoryInterface')
+    private readonly moviesRepository: MoviesRepositoryInterface,
   ) {}
   async findPaths(createGraphInput: CreateGraphInput): Promise<Graph> {
     const actorFrom = await this.findActorByName(
@@ -32,7 +34,7 @@ export class GraphsService {
     };
   }
   async generateGraph(): Promise<AdjacencyListItem[]> {
-    const actors = await this.actorRepository.find({
+    const actors = await this.actorsRepository.findWithRelations({
       relations: ['appearances', 'appearances.movie'],
     });
     const adjacencyList = actors.map(async (actor) => {
@@ -50,10 +52,11 @@ export class GraphsService {
     ]);
     const neighborsPromiseArray = actor.appearances.map(async (appearance) => {
       const movie = appearance.movie;
-      const MovieAppearances = await this.appearanceRepository.find({
-        where: { movie: movie },
-        relations: ['actor', 'movie'],
-      });
+      const MovieAppearances =
+        await this.appearancesRepository.findWithRelations({
+          where: { movie: movie },
+          relations: ['actor', 'movie'],
+        });
       const neighbors = MovieAppearances.filter(
         (a: Appearance) => a.actor.id !== actor.id,
       ).map((a: Appearance) => {
@@ -93,7 +96,7 @@ export class GraphsService {
     actorName: string,
     relations: string[] = [],
   ): Promise<Actor> {
-    const actor = await this.actorRepository.findOne({
+    const actor = await this.actorsRepository.findByCondition({
       where: { name: actorName },
       relations: relations,
     });
@@ -103,7 +106,7 @@ export class GraphsService {
     movieTitle: string,
     relations: string[] = [],
   ): Promise<Movie> {
-    const movie = await this.movieRepository.findOne({
+    const movie = await this.moviesRepository.findByCondition({
       where: { title: movieTitle },
       relations: relations,
     });

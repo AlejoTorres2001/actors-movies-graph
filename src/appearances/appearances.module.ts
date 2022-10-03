@@ -14,12 +14,12 @@ import { MoviesRepository } from 'src/shared/repositories/movies.repository';
   controllers: [AppearancesController],
   providers: [
     {
-      provide: 'AppearancesRepositoryInterface',
-      useClass: AppearancesRepository,
-    },
-    {
       provide: 'AppearancesServiceInterface',
       useClass: AppearancesService,
+    },
+    {
+      provide: 'AppearancesRepositoryInterface',
+      useClass: AppearancesRepository,
     },
     {
       provide: 'ActorRepositoryInterface',
