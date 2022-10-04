@@ -1,12 +1,16 @@
+import { Inject } from '@nestjs/common';
 import { Resolver, Query, Args } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import { Actor } from 'src/actors/entities/actor.entity';
 import { Movie } from 'src/movies/entities/movies.entity';
 import { AdjacencyListItem, Graph } from './entities';
-import { GraphsService } from './graphs.service';
+import { GraphsServiceInterface } from './interfaces/graphs.service.interface';
 @Resolver((of) => Graph)
 export class GraphsResolver {
-  constructor(private readonly graphsService: GraphsService) {}
+  constructor(
+    @Inject('GraphsServiceInterface')
+    private readonly graphsService: GraphsServiceInterface,
+  ) {}
 
   @Query((returns) => Graph)
   async findPaths(

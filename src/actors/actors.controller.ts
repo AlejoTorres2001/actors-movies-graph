@@ -10,22 +10,29 @@ import {
   Put,
   NotFoundException,
   InternalServerErrorException,
+  Inject,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { ActorsService } from './actors.service';
+import { HttpErrorMessage } from 'src/shared/entities/http-error-message.entity';
 import { ActorsQueryDto, CreateActorDto, UpdateActorDto } from './dto';
 import { Actor } from './entities/actor.entity';
+import { ActorsServiceInterface } from './interfaces/actors.service.interface';
 @ApiTags('actors')
 @Controller('actors')
 export class ActorsController {
-  constructor(private readonly actorsService: ActorsService) {}
+  constructor(
+    @Inject('ActorsServiceInterface')
+    private readonly actorsService: ActorsServiceInterface,
+  ) {}
   @ApiCreatedResponse({ type: Actor })
+  @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @Post()
   async create(@Body() createActorDto: CreateActorDto): Promise<Actor> {
     try {
@@ -35,6 +42,7 @@ export class ActorsController {
     }
   }
   @ApiCreatedResponse({ type: [Actor] })
+  @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @Get()
   async findAll(@Query() pagination: ActorsQueryDto): Promise<Actor[]> {
     let foundActors: Actor[];
@@ -50,7 +58,7 @@ export class ActorsController {
     }
     return foundActors;
   }
-  @ApiNotFoundResponse()
+  @ApiNotFoundResponse({ type: HttpErrorMessage })
   @Get(':id')
   @ApiParam({
     name: 'id',
@@ -70,7 +78,7 @@ export class ActorsController {
     }
     return foundActor;
   }
-  @ApiNotFoundResponse()
+  @ApiNotFoundResponse({ type: HttpErrorMessage })
   @ApiCreatedResponse({ type: Actor })
   @ApiBody({ type: UpdateActorDto })
   @ApiParam({
@@ -95,14 +103,14 @@ export class ActorsController {
     }
     return updatedActor;
   }
-
-  @Delete(':id')
   @ApiParam({
     name: 'id',
     type: Number,
     required: true,
     description: 'Id of the actor',
   })
+  @ApiNotFoundResponse({ type: HttpErrorMessage })
+  @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     let removedActor: Actor;
     try {
@@ -116,6 +124,7 @@ export class ActorsController {
   }
   @Post('/many')
   @ApiCreatedResponse({ type: [Actor] })
+  @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @ApiBody({ type: [CreateActorDto] })
   async createMany(@Body() actors: CreateActorDto[]): Promise<Actor[]> {
     let createdActors: Actor[];

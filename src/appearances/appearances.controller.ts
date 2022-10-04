@@ -10,27 +10,38 @@ import {
   Query,
   InternalServerErrorException,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiParam,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { HttpErrorMessage } from 'src/shared/entities/http-error-message.entity';
 
-import { AppearancesService } from './appearances.service';
 import {
   AppearancesQueryDto,
   CreateAppearanceDto,
   UpdateAppearanceDto,
 } from './dto';
 import { Appearance } from './entities/appearance.entity';
+import { AppearancesServiceInterface } from './interfaces/apperances.service.interface';
 @ApiTags('appearances')
 @Controller('appearances')
 export class AppearancesController {
-  constructor(private readonly appearancesService: AppearancesService) {}
+  constructor(
+    @Inject('AppearancesServiceInterface')
+    private readonly appearancesService: AppearancesServiceInterface,
+  ) {}
   @Post()
+  @ApiCreatedResponse({
+    type: Appearance,
+  })
+  @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   async create(
     @Body() createAppearanceDto: CreateAppearanceDto,
   ): Promise<Appearance> {
@@ -49,10 +60,11 @@ export class AppearancesController {
     }
     return createdAppearance;
   }
-  @ApiCreatedResponse({
+  @Get()
+  @ApiResponse({
     type: Appearance,
   })
-  @Get()
+  @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   async findAll(
     @Query() pagination: AppearancesQueryDto,
   ): Promise<Appearance[]> {
@@ -68,9 +80,12 @@ export class AppearancesController {
     return foundAppearances;
   }
   @ApiNotFoundResponse({
-    description: 'The appearance with the given id was not found',
+    type: HttpErrorMessage,
   })
   @Get(':id')
+  @ApiResponse({
+    type: Appearance,
+  })
   @ApiParam({
     name: 'id',
     type: Number,
@@ -89,7 +104,9 @@ export class AppearancesController {
     }
     return foundAppearance;
   }
-  @ApiNotFoundResponse({ description: 'Appearance not found' })
+  @ApiNotFoundResponse({
+    type: HttpErrorMessage,
+  })
   @ApiCreatedResponse({ type: Appearance })
   @ApiBody({ type: UpdateAppearanceDto })
   @ApiParam({
@@ -119,7 +136,9 @@ export class AppearancesController {
     }
     return updatedAppearance;
   }
-  @ApiNotFoundResponse({ description: 'Appearance not found' })
+  @ApiNotFoundResponse({
+    type: HttpErrorMessage,
+  })
   @ApiParam({
     name: 'id',
     type: Number,
@@ -127,12 +146,23 @@ export class AppearancesController {
     description: 'Id of the appearance',
   })
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.appearancesService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    let removedAppearance: Appearance;
+    try {
+      removedAppearance = await this.appearancesService.remove(id);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!removedAppearance) {
+      throw new NotFoundException(`Actor with ID ${id} not found.`);
+    }
   }
   @Post('/many')
   @ApiCreatedResponse({ type: [Appearance] })
   @ApiBody({ type: [CreateAppearanceDto] })
+  @ApiInternalServerErrorResponse({
+    type: HttpErrorMessage,
+  })
   async createMany(@Body() createAppearanceDto: CreateAppearanceDto[]) {
     let createdAppearances: Appearance[];
     try {

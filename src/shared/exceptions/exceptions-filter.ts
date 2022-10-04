@@ -6,6 +6,7 @@ import { GraphQLError } from 'graphql';
 import { Repository } from 'typeorm';
 import { ApiLog } from '../entities/api-log.entity';
 import { Exception } from '../entities/exception.entity';
+import { HttpErrorMessage } from '../entities/http-error-message.entity';
 @Catch()
 export class AllExceptionsFilter extends BaseExceptionFilter {
   constructor(
@@ -25,10 +26,7 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
       const status = exception.getStatus();
       const message = exception.message;
       const name = exception.name;
-      response.status(status).json({
-        statusCode: status,
-        message,
-      });
+      response.status(status).json(new HttpErrorMessage(status, message));
       this.apiLogRepository
         .save({
           method: request.method,

@@ -1,43 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MoviesRepository } from 'src/shared/repositories/movies.repository';
 import { Like, Repository } from 'typeorm';
 import { createMovieDto, MoviesQueryDto, updateMovieDto } from './dto';
 import { Movie } from './entities/movies.entity';
+import { MoviesRepositoryInterface } from './interfaces/movies.repository.interface';
+import { MoviesServiceInterface } from './interfaces/movies.service.interface';
 @Injectable()
-export class MoviesService {
+export class MoviesService implements MoviesServiceInterface {
   constructor(
-    @InjectRepository(Movie)
-    private readonly moviesRepository: Repository<Movie>,
+    @Inject('MovieRepositoryInterface')
+    private readonly moviesRepository: MoviesRepositoryInterface,
   ) {}
   async findAll({ limit, offset, title }: MoviesQueryDto): Promise<Movie[]> {
     const foundMovies = title
-      ? await this.moviesRepository.find({
+      ? await this.moviesRepository.findAll({
           where: {
             title: Like(`%${title}%`),
           },
           skip: offset,
           take: limit,
         })
-      : await this.moviesRepository.find({
+      : await this.moviesRepository.findAll({
           skip: offset,
           take: limit,
         });
     return foundMovies;
   }
-  async findById(id: number): Promise<Movie> {
-    const foundMovie = await this.moviesRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
+  async findOne(id: number): Promise<Movie> {
+    const foundMovie = await this.moviesRepository.findOneById(id);
     return foundMovie;
   }
 
-  async createMovie(MovieData: createMovieDto): Promise<Movie> {
+  async create(MovieData: createMovieDto): Promise<Movie> {
     const newMovie = this.moviesRepository.create(MovieData);
     return await this.moviesRepository.save(newMovie);
   }
-  async updateMovie(id: number, updateData: updateMovieDto): Promise<Movie> {
+  async update(id: number, updateData: updateMovieDto): Promise<Movie> {
     const updatedMovie: Movie = await this.moviesRepository.preload({
       id: id,
       ...updateData,
@@ -47,19 +46,15 @@ export class MoviesService {
     }
     return await this.moviesRepository.save(updatedMovie);
   }
-  async deleteMovie(id: number): Promise<Movie> {
-    const movieFound = await this.moviesRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
+  async remove(id: number): Promise<Movie> {
+    const movieFound = await this.moviesRepository.findOneById(id);
     if (!movieFound) {
       undefined;
     }
     return this.moviesRepository.remove(movieFound);
   }
   async createMany(movies: createMovieDto[]): Promise<Movie[]> {
-    const newMovies = this.moviesRepository.create(movies);
-    return await this.moviesRepository.save(newMovies);
+    const newMovies = this.moviesRepository.createMany(movies);
+    return await this.moviesRepository.saveMany(newMovies);
   }
 }
