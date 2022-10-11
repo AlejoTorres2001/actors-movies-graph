@@ -12,30 +12,17 @@ import { ApiTimeOutInterceptor } from './shared/interceptors/api-timeout.interce
 import { Exception } from './shared/entities/exception.entity';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './shared/exceptions/exceptions-filter';
+import { dataSourceOptions } from 'db/data-source';
+import configuration from '../config/configuration';
 @Module({
   imports: [
     MoviesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+      load: [configuration],
     }),
-    TypeOrmModule.forRootAsync({
-      useFactory: () => ({
-        type: 'postgres',
-        host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT),
-        username: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
-        entities: [__dirname + '/src/**/*.entity{.ts,.js}'],
-        ssl: true,
-        autoLoadEntities: true,
-        synchronize: true, //!only for dev
-        extra: {
-          max: 3,
-        },
-      }),
-    }),
+    TypeOrmModule.forRootAsync({ useFactory: () => dataSourceOptions }),
     ActorsModule,
     AppearancesModule,
     GraphsModule,
