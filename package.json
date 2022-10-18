@@ -25,7 +25,11 @@
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert"
   },
-  "dependencies": { 
+  "dependencies": {
+    "@automapper/classes": "^8.7.6",
+    "@automapper/core": "^8.7.6",
+    "@automapper/nestjs": "^8.7.6",
+    "@automapper/types": "^6.3.1",
     "@nestjs/apollo": "^10.1.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
