@@ -1,6 +1,13 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
 import { Like } from 'typeorm';
-import { ActorsQueryDto, CreateActorDto, UpdateActorDto } from './dto';
+import {
+  ActorsQueryDto,
+  CreateActorDto,
+  ReadActorDto,
+  UpdateActorDto,
+} from './dto';
 import { Actor } from './entities/actor.entity';
 import { ActorRepositoryInterface } from './interfaces/actors.repository.interface';
 import { ActorsServiceInterface } from './interfaces/actors.service.interface';
@@ -10,13 +17,18 @@ export class ActorsService implements ActorsServiceInterface {
   constructor(
     @Inject('ActorRepositoryInterface')
     private readonly actorsRepository: ActorRepositoryInterface,
+    @InjectMapper() private readonly classMapper: Mapper,
   ) {}
   async create(createActorDto: CreateActorDto): Promise<Actor> {
     const newActor = this.actorsRepository.create(createActorDto);
     return await this.actorsRepository.save(newActor);
   }
 
-  async findAll({ limit, offset, name }: ActorsQueryDto): Promise<Actor[]> {
+  async findAll({
+    limit,
+    offset,
+    name,
+  }: ActorsQueryDto): Promise<ReadActorDto[]> {
     const foundActors = name
       ? await this.actorsRepository.findAll({
           where: { name: Like(`%${name}%`) },
@@ -30,7 +42,7 @@ export class ActorsService implements ActorsServiceInterface {
           skip: offset,
           take: limit,
         });
-    return foundActors;
+    return this.classMapper.mapArray(foundActors, Actor, ReadActorDto);
   }
 
   async findOne(id: number): Promise<Actor> {
