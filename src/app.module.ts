@@ -14,8 +14,13 @@ import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './shared/exceptions/exceptions-filter';
 import { dataSourceOptions } from 'db/data-source';
 import configuration from '../config/configuration';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 @Module({
   imports: [
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+    }),
     MoviesModule,
     ConfigModule.forRoot({
       isGlobal: true,
