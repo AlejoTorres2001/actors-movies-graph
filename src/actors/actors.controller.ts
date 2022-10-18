@@ -21,7 +21,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorMessage } from 'src/shared/entities/http-error-message.entity';
-import { ActorsQueryDto, CreateActorDto, UpdateActorDto } from './dto';
+import {
+  ActorsQueryDto,
+  CreateActorDto,
+  ReadActorDto,
+  UpdateActorDto,
+} from './dto';
 import { Actor } from './entities/actor.entity';
 import { ActorsServiceInterface } from './interfaces/actors.service.interface';
 @ApiTags('actors')
@@ -44,7 +49,7 @@ export class ActorsController {
   @ApiCreatedResponse({ type: [Actor] })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @Get()
-  async findAll(@Query() pagination: ActorsQueryDto): Promise<Actor[]> {
+  async findAll(@Query() pagination: ActorsQueryDto): Promise<ReadActorDto[]> {
     let foundActors: Actor[];
     try {
       foundActors = await this.actorsService.findAll(pagination);
