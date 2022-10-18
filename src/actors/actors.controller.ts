@@ -50,7 +50,7 @@ export class ActorsController {
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @Get()
   async findAll(@Query() pagination: ActorsQueryDto): Promise<ReadActorDto[]> {
-    let foundActors: Actor[];
+    let foundActors: ReadActorDto[];
     try {
       foundActors = await this.actorsService.findAll(pagination);
     } catch (error) {
