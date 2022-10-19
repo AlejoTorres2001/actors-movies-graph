@@ -19,9 +19,13 @@ export class ActorsService implements ActorsServiceInterface {
     private readonly actorsRepository: ActorRepositoryInterface,
     @InjectMapper() private readonly classMapper: Mapper,
   ) {}
-  async create(createActorDto: CreateActorDto): Promise<Actor> {
+  async create(createActorDto: CreateActorDto): Promise<ReadActorDto> {
     const newActor = this.actorsRepository.create(createActorDto);
-    return await this.actorsRepository.save(newActor);
+    return this.classMapper.map(
+      await this.actorsRepository.save(newActor),
+      Actor,
+      ReadActorDto,
+    );
   }
 
   async findAll({
@@ -45,12 +49,15 @@ export class ActorsService implements ActorsServiceInterface {
     return this.classMapper.mapArray(foundActors, Actor, ReadActorDto);
   }
 
-  async findOne(id: number): Promise<Actor> {
+  async findOne(id: number): Promise<ReadActorDto> {
     const foundActor = await this.actorsRepository.findOneById(id);
-    return foundActor;
+    return this.classMapper.map(foundActor, Actor, ReadActorDto);
   }
 
-  async update(id: number, updateActorDto: UpdateActorDto): Promise<Actor> {
+  async update(
+    id: number,
+    updateActorDto: UpdateActorDto,
+  ): Promise<ReadActorDto> {
     const updatedActor = await this.actorsRepository.preload({
       id: id,
       ...updateActorDto,
@@ -58,18 +65,30 @@ export class ActorsService implements ActorsServiceInterface {
     if (!updatedActor) {
       return undefined;
     }
-    return await this.actorsRepository.save(updatedActor);
+    return this.classMapper.map(
+      await this.actorsRepository.save(updatedActor),
+      Actor,
+      ReadActorDto,
+    );
   }
 
-  async remove(id: number): Promise<Actor> {
+  async remove(id: number): Promise<ReadActorDto> {
     const foundActor = await this.actorsRepository.findOneById(id);
     if (!foundActor) {
       return undefined;
     }
-    return await this.actorsRepository.remove(foundActor);
+    return this.classMapper.map(
+      await this.actorsRepository.remove(foundActor),
+      Actor,
+      ReadActorDto,
+    );
   }
-  async createMany(actors: CreateActorDto[]): Promise<Actor[]> {
+  async createMany(actors: CreateActorDto[]): Promise<ReadActorDto[]> {
     const newActors = this.actorsRepository.createMany(actors);
-    return await this.actorsRepository.saveMany(newActors);
+    return this.classMapper.mapArray(
+      await this.actorsRepository.saveMany(newActors),
+      Actor,
+      ReadActorDto,
+    );
   }
 }
