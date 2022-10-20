@@ -1,8 +1,12 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
+import { ReadActorDto } from 'src/actors/dto';
 import { Actor } from 'src/actors/entities/actor.entity';
 import { ActorRepositoryInterface } from 'src/actors/interfaces/actors.repository.interface';
 import { Appearance } from 'src/appearances/entities/appearance.entity';
 import { AppearancesRepositoryInterface } from 'src/appearances/interfaces/apperances.repository.interface';
+import { ReadMovieDto } from 'src/movies/dto';
 import { Movie } from 'src/movies/entities/movies.entity';
 import { MoviesRepositoryInterface } from 'src/movies/interfaces/movies.repository.interface';
 import { CreateGraphInput } from './dto/create-graph.input';
@@ -19,6 +23,7 @@ export class GraphsService implements GraphsServiceInterface {
     private readonly actorsRepository: ActorRepositoryInterface,
     @Inject('MovieRepositoryInterface')
     private readonly moviesRepository: MoviesRepositoryInterface,
+    @InjectMapper() private readonly classMapper: Mapper,
   ) {}
   async findPaths(createGraphInput: CreateGraphInput): Promise<Graph> {
     const actorFrom = await this.findActorByName(
@@ -27,7 +32,6 @@ export class GraphsService implements GraphsServiceInterface {
     const actorTo = await this.findActorByName(createGraphInput.actorNameTo);
     const pathsFound = await this.BFS(actorFrom, actorTo);
     return {
-      id: 1,
       actorFrom: actorFrom,
       actorTo: actorTo,
       paths: pathsFound,
@@ -112,7 +116,7 @@ export class GraphsService implements GraphsServiceInterface {
     });
     return movie;
   }
-  async getActorMovies(actorName: string): Promise<Movie[]> {
+  async getActorMovies(actorName: string): Promise<ReadMovieDto[]> {
     const actor = await this.findActorByName(actorName, [
       'appearances',
       'appearances.movie',
@@ -120,9 +124,13 @@ export class GraphsService implements GraphsServiceInterface {
     if (!actor) {
       return [];
     }
-    return actor.appearances.map((a) => a.movie);
+    return this.classMapper.mapArray(
+      actor.appearances.map((a) => a.movie),
+      Movie,
+      ReadMovieDto,
+    );
   }
-  async getMovieActors(movieTitle: string): Promise<Actor[]> {
+  async getMovieActors(movieTitle: string): Promise<ReadActorDto[]> {
     const movie = await this.findMovieByTitle(movieTitle, [
       'appearances',
       'appearances.actor',
@@ -130,6 +138,8 @@ export class GraphsService implements GraphsServiceInterface {
     if (!movie) {
       return [];
     }
-    return movie.appearances.map((a) => a.actor);
+    const foundActors = movie.appearances.map((a) => a.actor);
+    const array = this.classMapper.mapArray(foundActors, Actor, ReadActorDto);
+    return array;
   }
 }

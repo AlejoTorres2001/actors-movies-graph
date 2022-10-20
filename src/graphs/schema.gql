@@ -10,7 +10,7 @@ type Actor {
 }
 
 type AdjacencyListItem {
-  actor: Actor!
+  actor: ReadActorDto!
   neighbors: [Neighbor!]!
 }
 
@@ -23,7 +23,6 @@ type Appearance {
 type Graph {
   actorFrom: Actor!
   actorTo: Actor!
-  id: Int!
   paths: [[Neighbor!]!]!
 }
 
@@ -35,13 +34,25 @@ type Movie {
 }
 
 type Neighbor {
-  actor: Actor!
-  movie: Movie
+  actor: ReadActorDto!
+  movie: ReadMovieDto
 }
 
 type Query {
   findPaths(actorNameFrom: String!, actorNameTo: String!): Graph!
   generateGraph: [AdjacencyListItem!]!
-  getActorMovies(actorName: String!): [Movie!]!
-  getMovieActors(movieTitle: String!): [Actor!]!
+  getActorMovies(actorName: String!): [ReadMovieDto!]!
+  getMovieActors(movieTitle: String!): [ReadActorDto!]!
+}
+
+type ReadActorDto {
+  birthYear: Int!
+  id: Int!
+  name: String!
+}
+
+type ReadMovieDto {
+  id: Int!
+  title: String!
+  year: Int!
 }
