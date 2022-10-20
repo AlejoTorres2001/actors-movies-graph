@@ -1,7 +1,9 @@
+import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsAlpha, IsAscii, IsNumber, IsOptional } from 'class-validator';
+import { IsAscii, IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateActorDto {
+  @AutoMap()
   @ApiProperty({ required: false })
   @IsAscii()
   @IsOptional()
@@ -9,5 +11,6 @@ export class UpdateActorDto {
   @ApiProperty({ required: false })
   @IsNumber()
   @IsOptional()
+  @AutoMap()
   birthYear: number;
 }

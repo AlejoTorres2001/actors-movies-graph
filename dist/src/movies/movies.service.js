@@ -13,13 +13,17 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MoviesService = void 0;
+const nestjs_1 = require("@automapper/nestjs");
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
+const dto_1 = require("./dto");
+const movies_entity_1 = require("./entities/movies.entity");
 let MoviesService = class MoviesService {
-    constructor(moviesRepository) {
+    constructor(moviesRepository, classMapper) {
         this.moviesRepository = moviesRepository;
+        this.classMapper = classMapper;
     }
-    async findAll({ limit, offset, title }) {
+    async findAll({ limit, offset, title, }) {
         const foundMovies = title
             ? await this.moviesRepository.findAll({
                 where: {
@@ -32,39 +36,40 @@ let MoviesService = class MoviesService {
                 skip: offset,
                 take: limit,
             });
-        return foundMovies;
+        return this.classMapper.mapArray(foundMovies, movies_entity_1.Movie, dto_1.ReadMovieDto);
     }
     async findOne(id) {
         const foundMovie = await this.moviesRepository.findOneById(id);
-        return foundMovie;
+        return this.classMapper.map(foundMovie, movies_entity_1.Movie, dto_1.ReadMovieDto);
     }
     async create(MovieData) {
         const newMovie = this.moviesRepository.create(MovieData);
-        return await this.moviesRepository.save(newMovie);
+        return this.classMapper.map(await this.moviesRepository.save(newMovie), movies_entity_1.Movie, dto_1.ReadMovieDto);
     }
     async update(id, updateData) {
         const updatedMovie = await this.moviesRepository.preload(Object.assign({ id: id }, updateData));
         if (!updatedMovie) {
             return undefined;
         }
-        return await this.moviesRepository.save(updatedMovie);
+        return this.classMapper.map(await this.moviesRepository.save(updatedMovie), movies_entity_1.Movie, dto_1.ReadMovieDto);
     }
     async remove(id) {
         const movieFound = await this.moviesRepository.findOneById(id);
         if (!movieFound) {
             undefined;
         }
-        return this.moviesRepository.remove(movieFound);
+        return this.classMapper.map(await this.moviesRepository.remove(movieFound), movies_entity_1.Movie, dto_1.ReadMovieDto);
     }
     async createMany(movies) {
         const newMovies = this.moviesRepository.createMany(movies);
-        return await this.moviesRepository.saveMany(newMovies);
+        return this.classMapper.mapArray(await this.moviesRepository.saveMany(newMovies), movies_entity_1.Movie, dto_1.ReadMovieDto);
     }
 };
 MoviesService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)('MovieRepositoryInterface')),
-    __metadata("design:paramtypes", [Object])
+    __param(1, (0, nestjs_1.InjectMapper)()),
+    __metadata("design:paramtypes", [Object, Object])
 ], MoviesService);
 exports.MoviesService = MoviesService;
 //# sourceMappingURL=movies.service.js.map

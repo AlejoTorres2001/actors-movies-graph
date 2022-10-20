@@ -20,6 +20,8 @@ const movies_entity_1 = require("../movies/entities/movies.entity");
 const appearances_repository_1 = require("../shared/repositories/appearances.repository");
 const actors_repository_1 = require("../shared/repositories/actors.repository");
 const movies_repository_1 = require("../shared/repositories/movies.repository");
+const actor_profile_1 = require("../shared/profiles/actor-profile");
+const movie_profiler_1 = require("../shared/profiles/movie-profiler");
 let GraphsModule = class GraphsModule {
 };
 GraphsModule = __decorate([
@@ -64,6 +66,8 @@ GraphsModule = __decorate([
                 provide: 'MovieRepositoryInterface',
                 useClass: movies_repository_1.MoviesRepository,
             },
+            actor_profile_1.ActorProfile,
+            movie_profiler_1.MovieProfile,
         ],
     })
 ], GraphsModule);

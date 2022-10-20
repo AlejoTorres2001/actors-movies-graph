@@ -21,7 +21,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorMessage } from 'src/shared/entities/http-error-message.entity';
-import { ActorsQueryDto, CreateActorDto, UpdateActorDto } from './dto';
+import {
+  ActorsQueryDto,
+  CreateActorDto,
+  ReadActorDto,
+  UpdateActorDto,
+} from './dto';
 import { Actor } from './entities/actor.entity';
 import { ActorsServiceInterface } from './interfaces/actors.service.interface';
 @ApiTags('actors')
@@ -31,21 +36,21 @@ export class ActorsController {
     @Inject('ActorsServiceInterface')
     private readonly actorsService: ActorsServiceInterface,
   ) {}
-  @ApiCreatedResponse({ type: Actor })
+  @ApiCreatedResponse({ type: ReadActorDto })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @Post()
-  async create(@Body() createActorDto: CreateActorDto): Promise<Actor> {
+  async create(@Body() createActorDto: CreateActorDto): Promise<ReadActorDto> {
     try {
       return await this.actorsService.create(createActorDto);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
-  @ApiCreatedResponse({ type: [Actor] })
+  @ApiCreatedResponse({ type: [ReadActorDto] })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @Get()
-  async findAll(@Query() pagination: ActorsQueryDto): Promise<Actor[]> {
-    let foundActors: Actor[];
+  async findAll(@Query() pagination: ActorsQueryDto): Promise<ReadActorDto[]> {
+    let foundActors: ReadActorDto[];
     try {
       foundActors = await this.actorsService.findAll(pagination);
     } catch (error) {
@@ -66,8 +71,8 @@ export class ActorsController {
     required: true,
     description: 'Id of the actor',
   })
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Actor> {
-    let foundActor: Actor;
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<ReadActorDto> {
+    let foundActor: ReadActorDto;
     try {
       foundActor = await this.actorsService.findOne(id);
     } catch (error) {
@@ -91,8 +96,8 @@ export class ActorsController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateActorDto: UpdateActorDto,
-  ): Promise<Actor> {
-    let updatedActor: Actor;
+  ): Promise<ReadActorDto> {
+    let updatedActor: ReadActorDto;
     try {
       updatedActor = await this.actorsService.update(id, updateActorDto);
     } catch (error) {
@@ -112,7 +117,7 @@ export class ActorsController {
   @ApiNotFoundResponse({ type: HttpErrorMessage })
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    let removedActor: Actor;
+    let removedActor: ReadActorDto;
     try {
       removedActor = await this.actorsService.remove(id);
     } catch (error) {
@@ -123,11 +128,11 @@ export class ActorsController {
     }
   }
   @Post('/many')
-  @ApiCreatedResponse({ type: [Actor] })
+  @ApiCreatedResponse({ type: [ReadActorDto] })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @ApiBody({ type: [CreateActorDto] })
-  async createMany(@Body() actors: CreateActorDto[]): Promise<Actor[]> {
-    let createdActors: Actor[];
+  async createMany(@Body() actors: CreateActorDto[]): Promise<ReadActorDto[]> {
+    let createdActors: ReadActorDto[];
     try {
       createdActors = await this.actorsService.createMany(actors);
     } catch (error) {

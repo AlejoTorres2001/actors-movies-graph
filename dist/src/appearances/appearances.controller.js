@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const http_error_message_entity_1 = require("../shared/entities/http-error-message.entity");
 const dto_1 = require("./dto");
+const read_appearances_dto_1 = require("./dto/read-appearances.dto");
 const appearance_entity_1 = require("./entities/appearance.entity");
 let AppearancesController = class AppearancesController {
     constructor(appearancesService) {
@@ -114,7 +115,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)(),
     (0, swagger_1.ApiResponse)({
-        type: appearance_entity_1.Appearance,
+        type: read_appearances_dto_1.ReadAppearanceDto,
     }),
     (0, swagger_1.ApiInternalServerErrorResponse)({ type: http_error_message_entity_1.HttpErrorMessage }),
     __param(0, (0, common_1.Query)()),

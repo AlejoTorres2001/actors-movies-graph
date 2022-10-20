@@ -1,8 +1,13 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { MoviesRepository } from 'src/shared/repositories/movies.repository';
-import { Like, Repository } from 'typeorm';
-import { createMovieDto, MoviesQueryDto, updateMovieDto } from './dto';
+import { Like } from 'typeorm';
+import {
+  createMovieDto,
+  MoviesQueryDto,
+  ReadMovieDto,
+  updateMovieDto,
+} from './dto';
 import { Movie } from './entities/movies.entity';
 import { MoviesRepositoryInterface } from './interfaces/movies.repository.interface';
 import { MoviesServiceInterface } from './interfaces/movies.service.interface';
@@ -11,8 +16,13 @@ export class MoviesService implements MoviesServiceInterface {
   constructor(
     @Inject('MovieRepositoryInterface')
     private readonly moviesRepository: MoviesRepositoryInterface,
+    @InjectMapper() private readonly classMapper: Mapper,
   ) {}
-  async findAll({ limit, offset, title }: MoviesQueryDto): Promise<Movie[]> {
+  async findAll({
+    limit,
+    offset,
+    title,
+  }: MoviesQueryDto): Promise<ReadMovieDto[]> {
     const foundMovies = title
       ? await this.moviesRepository.findAll({
           where: {
@@ -25,18 +35,22 @@ export class MoviesService implements MoviesServiceInterface {
           skip: offset,
           take: limit,
         });
-    return foundMovies;
+    return this.classMapper.mapArray(foundMovies, Movie, ReadMovieDto);
   }
-  async findOne(id: number): Promise<Movie> {
+  async findOne(id: number): Promise<ReadMovieDto> {
     const foundMovie = await this.moviesRepository.findOneById(id);
-    return foundMovie;
+    return this.classMapper.map(foundMovie, Movie, ReadMovieDto);
   }
 
-  async create(MovieData: createMovieDto): Promise<Movie> {
+  async create(MovieData: createMovieDto): Promise<ReadMovieDto> {
     const newMovie = this.moviesRepository.create(MovieData);
-    return await this.moviesRepository.save(newMovie);
+    return this.classMapper.map(
+      await this.moviesRepository.save(newMovie),
+      Movie,
+      ReadMovieDto,
+    );
   }
-  async update(id: number, updateData: updateMovieDto): Promise<Movie> {
+  async update(id: number, updateData: updateMovieDto): Promise<ReadMovieDto> {
     const updatedMovie: Movie = await this.moviesRepository.preload({
       id: id,
       ...updateData,
@@ -44,17 +58,29 @@ export class MoviesService implements MoviesServiceInterface {
     if (!updatedMovie) {
       return undefined;
     }
-    return await this.moviesRepository.save(updatedMovie);
+    return this.classMapper.map(
+      await this.moviesRepository.save(updatedMovie),
+      Movie,
+      ReadMovieDto,
+    );
   }
-  async remove(id: number): Promise<Movie> {
+  async remove(id: number): Promise<ReadMovieDto> {
     const movieFound = await this.moviesRepository.findOneById(id);
     if (!movieFound) {
       undefined;
     }
-    return this.moviesRepository.remove(movieFound);
+    return this.classMapper.map(
+      await this.moviesRepository.remove(movieFound),
+      Movie,
+      ReadMovieDto,
+    );
   }
-  async createMany(movies: createMovieDto[]): Promise<Movie[]> {
+  async createMany(movies: createMovieDto[]): Promise<ReadMovieDto[]> {
     const newMovies = this.moviesRepository.createMany(movies);
-    return await this.moviesRepository.saveMany(newMovies);
+    return this.classMapper.mapArray(
+      await this.moviesRepository.saveMany(newMovies),
+      Movie,
+      ReadMovieDto,
+    );
   }
 }

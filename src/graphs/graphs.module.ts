@@ -12,6 +12,8 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { AppearancesRepository } from 'src/shared/repositories/appearances.repository';
 import { ActorsRepository } from 'src/shared/repositories/actors.repository';
 import { MoviesRepository } from 'src/shared/repositories/movies.repository';
+import { ActorProfile } from 'src/shared/profiles/actor-profile';
+import { MovieProfile } from 'src/shared/profiles/movie-profiler';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -52,6 +54,8 @@ import { MoviesRepository } from 'src/shared/repositories/movies.repository';
       provide: 'MovieRepositoryInterface',
       useClass: MoviesRepository,
     },
+    ActorProfile,
+    MovieProfile,
   ],
 })
 export class GraphsModule {}

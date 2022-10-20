@@ -14,15 +14,18 @@ const swagger_1 = require("@nestjs/swagger");
 const appearance_entity_1 = require("../../appearances/entities/appearance.entity");
 const typeorm_1 = require("typeorm");
 const graphql_1 = require("@nestjs/graphql");
+const classes_1 = require("@automapper/classes");
 let Actor = class Actor {
 };
 __decorate([
+    (0, classes_1.AutoMap)(),
     (0, graphql_1.Field)((type) => graphql_1.Int),
     (0, swagger_1.ApiProperty)({ required: true }),
     (0, typeorm_1.PrimaryGeneratedColumn)('increment'),
     __metadata("design:type", Number)
 ], Actor.prototype, "id", void 0);
 __decorate([
+    (0, classes_1.AutoMap)(),
     (0, graphql_1.Field)((type) => String),
     (0, typeorm_1.Column)(),
     (0, swagger_1.ApiProperty)({ required: true }),
@@ -32,11 +35,13 @@ __decorate([
     (0, graphql_1.Field)((type) => String),
     (0, swagger_1.ApiProperty)({ required: true }),
     (0, typeorm_1.Column)(),
+    (0, classes_1.AutoMap)(),
     __metadata("design:type", Number)
 ], Actor.prototype, "birthYear", void 0);
 __decorate([
     (0, graphql_1.Field)((type) => [appearance_entity_1.Appearance]),
     (0, typeorm_1.OneToMany)(() => appearance_entity_1.Appearance, (appearance) => appearance.actor),
+    (0, classes_1.AutoMap)(() => appearance_entity_1.Appearance),
     __metadata("design:type", Array)
 ], Actor.prototype, "appearances", void 0);
 Actor = __decorate([

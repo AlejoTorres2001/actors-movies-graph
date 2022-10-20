@@ -26,4 +26,4 @@ __decorate([
     __metadata("design:type", String)
 ], MoviesQueryDto.prototype, "title", void 0);
 exports.MoviesQueryDto = MoviesQueryDto;
-//# sourceMappingURL=movies-query-dto.js.map
+//# sourceMappingURL=movies-query.dto.js.map

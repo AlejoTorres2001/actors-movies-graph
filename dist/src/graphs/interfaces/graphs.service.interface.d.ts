@@ -1,10 +1,10 @@
-import { Actor } from 'src/actors/entities/actor.entity';
-import { Movie } from 'src/movies/entities/movies.entity';
+import { ReadActorDto } from 'src/actors/dto';
+import { ReadMovieDto } from 'src/movies/dto';
 import { CreateGraphInput } from '../dto/create-graph.input';
 import { AdjacencyListItem, Graph } from '../entities';
 export interface GraphsServiceInterface {
     findPaths(createGraphInput: CreateGraphInput): Promise<Graph>;
     generateGraph(): Promise<AdjacencyListItem[]>;
-    getActorMovies(actorName: string): Promise<Movie[]>;
-    getMovieActors(actorName: string): Promise<Actor[]>;
+    getActorMovies(actorName: string): Promise<ReadMovieDto[]>;
+    getMovieActors(actorName: string): Promise<ReadActorDto[]>;
 }

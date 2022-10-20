@@ -8,6 +8,7 @@ import { AppearancesRepository } from 'src/shared/repositories/appearances.repos
 import { AppearancesService } from './appearances.service';
 import { ActorsRepository } from 'src/shared/repositories/actors.repository';
 import { MoviesRepository } from 'src/shared/repositories/movies.repository';
+import { AppearanceProfile } from 'src/shared/profiles/appearance-profile';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Appearance, Actor, Movie])],
@@ -29,6 +30,7 @@ import { MoviesRepository } from 'src/shared/repositories/movies.repository';
       provide: 'MovieRepositoryInterface',
       useClass: MoviesRepository,
     },
+    AppearanceProfile,
   ],
 })
 export class AppearancesModule {}

@@ -1,6 +1,6 @@
-import { Actor } from 'src/actors/entities/actor.entity';
-import { Movie } from 'src/movies/entities/movies.entity';
+import { ReadActorDto } from 'src/actors/dto';
+import { ReadMovieDto } from 'src/movies/dto';
 export declare class Neighbor {
-    actor: Actor;
-    movie: Movie;
+    actor: ReadActorDto;
+    movie: ReadMovieDto;
 }

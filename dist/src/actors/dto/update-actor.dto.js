@@ -10,11 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateActorDto = void 0;
+const classes_1 = require("@automapper/classes");
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class UpdateActorDto {
 }
 __decorate([
+    (0, classes_1.AutoMap)(),
     (0, swagger_1.ApiProperty)({ required: false }),
     (0, class_validator_1.IsAscii)(),
     (0, class_validator_1.IsOptional)(),
@@ -24,6 +26,7 @@ __decorate([
     (0, swagger_1.ApiProperty)({ required: false }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsOptional)(),
+    (0, classes_1.AutoMap)(),
     __metadata("design:type", Number)
 ], UpdateActorDto.prototype, "birthYear", void 0);
 exports.UpdateActorDto = UpdateActorDto;

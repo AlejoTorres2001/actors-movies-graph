@@ -1,10 +1,10 @@
-import { Actor } from 'src/actors/entities/actor.entity';
-import { Movie } from 'src/movies/entities/movies.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { ReadActorDto } from 'src/actors/dto';
+import { ReadMovieDto } from 'src/movies/dto';
 @ObjectType()
 export class Neighbor {
-  @Field((type) => Actor)
-  actor: Actor;
-  @Field((type) => Movie, { nullable: true })
-  movie: Movie;
+  @Field((type) => ReadActorDto)
+  actor: ReadActorDto;
+  @Field((type) => ReadMovieDto, { nullable: true })
+  movie: ReadMovieDto;
 }

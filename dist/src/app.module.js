@@ -23,11 +23,16 @@ const core_1 = require("@nestjs/core");
 const exceptions_filter_1 = require("./shared/exceptions/exceptions-filter");
 const data_source_1 = require("../db/data-source");
 const configuration_1 = require("../config/configuration");
+const nestjs_1 = require("@automapper/nestjs");
+const classes_1 = require("@automapper/classes");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            nestjs_1.AutomapperModule.forRoot({
+                strategyInitializer: (0, classes_1.classes)(),
+            }),
             movies_module_1.MoviesModule,
             config_1.ConfigModule.forRoot({
                 isGlobal: true,

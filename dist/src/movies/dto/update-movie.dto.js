@@ -12,18 +12,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateMovieDto = void 0;
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
+const classes_1 = require("@automapper/classes");
 class updateMovieDto {
 }
 __decorate([
     (0, swagger_1.ApiProperty)({ required: false }),
     (0, class_validator_1.IsAscii)(),
     (0, class_validator_1.IsOptional)(),
+    (0, classes_1.AutoMap)(),
     __metadata("design:type", String)
 ], updateMovieDto.prototype, "title", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ required: false }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsOptional)(),
+    (0, classes_1.AutoMap)(),
     __metadata("design:type", Number)
 ], updateMovieDto.prototype, "year", void 0);
 exports.updateMovieDto = updateMovieDto;

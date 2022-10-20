@@ -16,10 +16,6 @@ const neighbor_entity_1 = require("./neighbor.entity");
 let Graph = class Graph {
 };
 __decorate([
-    (0, graphql_1.Field)((type) => graphql_1.Int),
-    __metadata("design:type", Number)
-], Graph.prototype, "id", void 0);
-__decorate([
     (0, graphql_1.Field)((type) => actor_entity_1.Actor),
     __metadata("design:type", actor_entity_1.Actor)
 ], Graph.prototype, "actorFrom", void 0);

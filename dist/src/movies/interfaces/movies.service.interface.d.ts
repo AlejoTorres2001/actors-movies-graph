@@ -1,10 +1,9 @@
-import { createMovieDto, MoviesQueryDto, updateMovieDto } from '../dto';
-import { Movie } from '../entities/movies.entity';
+import { createMovieDto, MoviesQueryDto, ReadMovieDto, updateMovieDto } from '../dto';
 export interface MoviesServiceInterface {
-    create(createActorDto: createMovieDto): Promise<Movie>;
-    findAll(actorsQueryDto: MoviesQueryDto): Promise<Movie[]>;
-    findOne(id: number): Promise<Movie>;
-    update(id: number, updateActorDto: updateMovieDto): Promise<Movie>;
-    remove(id: number): Promise<Movie>;
-    createMany(createActorDto: createMovieDto[]): Promise<Movie[]>;
+    create(createActorDto: createMovieDto): Promise<ReadMovieDto>;
+    findAll(actorsQueryDto: MoviesQueryDto): Promise<ReadMovieDto[]>;
+    findOne(id: number): Promise<ReadMovieDto>;
+    update(id: number, updateActorDto: updateMovieDto): Promise<ReadMovieDto>;
+    remove(id: number): Promise<ReadMovieDto>;
+    createMany(createActorDto: createMovieDto[]): Promise<ReadMovieDto[]>;
 }
