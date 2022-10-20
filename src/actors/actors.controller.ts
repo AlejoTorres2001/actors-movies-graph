@@ -36,7 +36,7 @@ export class ActorsController {
     @Inject('ActorsServiceInterface')
     private readonly actorsService: ActorsServiceInterface,
   ) {}
-  @ApiCreatedResponse({ type: Actor })
+  @ApiCreatedResponse({ type: ReadActorDto })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @Post()
   async create(@Body() createActorDto: CreateActorDto): Promise<ReadActorDto> {
@@ -46,7 +46,7 @@ export class ActorsController {
       throw new InternalServerErrorException(error);
     }
   }
-  @ApiCreatedResponse({ type: [Actor] })
+  @ApiCreatedResponse({ type: [ReadActorDto] })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @Get()
   async findAll(@Query() pagination: ActorsQueryDto): Promise<ReadActorDto[]> {
@@ -128,7 +128,7 @@ export class ActorsController {
     }
   }
   @Post('/many')
-  @ApiCreatedResponse({ type: [Actor] })
+  @ApiCreatedResponse({ type: [ReadActorDto] })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @ApiBody({ type: [CreateActorDto] })
   async createMany(@Body() actors: CreateActorDto[]): Promise<ReadActorDto[]> {

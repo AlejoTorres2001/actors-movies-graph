@@ -21,7 +21,12 @@ import {
   ApiBody,
   ApiInternalServerErrorResponse,
 } from '@nestjs/swagger';
-import { createMovieDto, MoviesQueryDto, updateMovieDto } from './dto';
+import {
+  createMovieDto,
+  MoviesQueryDto,
+  ReadMovieDto,
+  updateMovieDto,
+} from './dto';
 import { MoviesServiceInterface } from './interfaces/movies.service.interface';
 import { HttpErrorMessage } from 'src/shared/entities/http-error-message.entity';
 
@@ -32,11 +37,13 @@ export class MoviesController {
     @Inject('MovieServiceInterface')
     private MoviesService: MoviesServiceInterface,
   ) {}
-  @ApiCreatedResponse({ type: [Movie] })
+  @ApiCreatedResponse({ type: [ReadMovieDto] })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @Get()
-  async getMovies(@Query() pagination: MoviesQueryDto): Promise<Movie[]> {
-    let foundMovies: Movie[];
+  async getMovies(
+    @Query() pagination: MoviesQueryDto,
+  ): Promise<ReadMovieDto[]> {
+    let foundMovies: ReadMovieDto[];
     try {
       foundMovies = await this.MoviesService.findAll(pagination);
     } catch (error) {
@@ -55,11 +62,13 @@ export class MoviesController {
     required: true,
     description: 'Id of the movie',
   })
-  @ApiCreatedResponse({ type: Movie })
+  @ApiCreatedResponse({ type: ReadMovieDto })
   @ApiNotFoundResponse({ type: HttpErrorMessage })
   @Get(':id')
-  async getMovieById(@Param('id', ParseIntPipe) id: number): Promise<Movie> {
-    let foundMovie: Movie;
+  async getMovieById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ReadMovieDto> {
+    let foundMovie: ReadMovieDto;
     try {
       foundMovie = await this.MoviesService.findOne(id);
     } catch (error) {
@@ -70,17 +79,17 @@ export class MoviesController {
     }
     return foundMovie;
   }
-  @ApiCreatedResponse({ type: Movie })
+  @ApiCreatedResponse({ type: ReadMovieDto })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @Post()
-  async createMovie(@Body() Body: createMovieDto): Promise<Movie> {
+  async createMovie(@Body() Body: createMovieDto): Promise<ReadMovieDto> {
     try {
       return await this.MoviesService.create(Body);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
-  @ApiCreatedResponse({ type: Movie })
+  @ApiCreatedResponse({ type: ReadMovieDto })
   @ApiNotFoundResponse({ type: HttpErrorMessage })
   @ApiBody({ type: updateMovieDto })
   @ApiParam({
@@ -93,8 +102,8 @@ export class MoviesController {
   async updateMovie(
     @Param('id', ParseIntPipe) id: number,
     @Body() Body: updateMovieDto,
-  ): Promise<Movie> {
-    let updatedMovie: Movie;
+  ): Promise<ReadMovieDto> {
+    let updatedMovie: ReadMovieDto;
     try {
       updatedMovie = await this.MoviesService.update(id, Body);
     } catch (error) {
@@ -120,7 +129,7 @@ export class MoviesController {
   @ApiNotFoundResponse({ type: HttpErrorMessage })
   @Delete(':id')
   async deleteMovie(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    let removedMovie: Movie;
+    let removedMovie: ReadMovieDto;
     try {
       removedMovie = await this.MoviesService.remove(id);
     } catch (error) {
@@ -134,8 +143,8 @@ export class MoviesController {
   @ApiCreatedResponse({ type: [Movie] })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   @ApiBody({ type: [createMovieDto] })
-  async CreateMany(@Body() movies: createMovieDto[]): Promise<Movie[]> {
-    let createdMovies: Movie[];
+  async CreateMany(@Body() movies: createMovieDto[]): Promise<ReadMovieDto[]> {
+    let createdMovies: ReadMovieDto[];
     try {
       createdMovies = await this.MoviesService.createMany(movies);
     } catch (error) {
