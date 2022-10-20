@@ -170,7 +170,7 @@ __decorate([
 ], ActorsController.prototype, "createMany", null);
 ActorsController = __decorate([
     (0, swagger_1.ApiTags)('actors'),
-    (0, common_1.Controller)('actors'),
+    (0, common_1.Controller)('/api/actors'),
     __param(0, (0, common_1.Inject)('ActorsServiceInterface')),
     __metadata("design:paramtypes", [Object])
 ], ActorsController);

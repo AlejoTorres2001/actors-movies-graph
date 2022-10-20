@@ -191,7 +191,7 @@ __decorate([
 ], AppearancesController.prototype, "createMany", null);
 AppearancesController = __decorate([
     (0, swagger_1.ApiTags)('appearances'),
-    (0, common_1.Controller)('appearances'),
+    (0, common_1.Controller)('api/appearances'),
     __param(0, (0, common_1.Inject)('AppearancesServiceInterface')),
     __metadata("design:paramtypes", [Object])
 ], AppearancesController);

@@ -13,7 +13,6 @@ const typeorm_1 = require("@nestjs/typeorm");
 const config_1 = require("@nestjs/config");
 const actors_module_1 = require("./actors/actors.module");
 const appearances_module_1 = require("./appearances/appearances.module");
-const app_controller_1 = require("./app.controller");
 const graphs_module_1 = require("./graphs/graphs.module");
 const api_log_entity_1 = require("./shared/entities/api-log.entity");
 const logger_interceptor_1 = require("./shared/interceptors/logger.interceptor");
@@ -25,11 +24,16 @@ const data_source_1 = require("../db/data-source");
 const configuration_1 = require("../config/configuration");
 const nestjs_1 = require("@automapper/nestjs");
 const classes_1 = require("@automapper/classes");
+const serve_static_1 = require("@nestjs/serve-static");
+const path_1 = require("path");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            serve_static_1.ServeStaticModule.forRoot({
+                rootPath: (0, path_1.join)(__dirname, '..', 'front'),
+            }),
             nestjs_1.AutomapperModule.forRoot({
                 strategyInitializer: (0, classes_1.classes)(),
             }),
@@ -46,7 +50,7 @@ AppModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([api_log_entity_1.ApiLog]),
             typeorm_1.TypeOrmModule.forFeature([exception_entity_1.Exception]),
         ],
-        controllers: [app_controller_1.AppController],
+        controllers: [],
         providers: [
             {
                 provide: 'APP_INTERCEPTOR',

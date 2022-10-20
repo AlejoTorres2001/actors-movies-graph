@@ -177,7 +177,7 @@ __decorate([
 ], MoviesController.prototype, "CreateMany", null);
 MoviesController = __decorate([
     (0, swagger_1.ApiTags)('movies'),
-    (0, common_1.Controller)('movies'),
+    (0, common_1.Controller)('api/movies'),
     __param(0, (0, common_1.Inject)('MovieServiceInterface')),
     __metadata("design:paramtypes", [Object])
 ], MoviesController);
