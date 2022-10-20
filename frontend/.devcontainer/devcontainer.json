@@ -18,7 +18,35 @@
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"dbaeumer.vscode-eslint"
+				"dbaeumer.vscode-eslint",
+				"usernamehw.errorlens",
+				"dsznajder.es7-react-js-snippets",
+				"mhutchie.git-graph",
+				"eamodio.gitlens",
+				"formulahendry.auto-close-tag",
+				"formulahendry.auto-rename-tag",
+				"aaron-bond.better-comments",
+				"johnpapa.Angular2",
+				"Angular.ng-template",
+				"RapidAPI.vscode-rapidapi-client",
+				"ms-vscode-remote.remote-containers",
+				"ms-vscode-remote.remote-wsl",
+				"stevencl.addDocComments",
+				"streetsidesoftware.code-spell-checker",
+				"ms-azuretools.vscode-docker",
+				"GitHub.copilot",
+				"GitHub.vscode-pull-request-github",
+				"ecmel.vscode-html-css",
+				"kisstkondoros.vscode-gutter-preview",
+				"wix.vscode-import-cost",
+				"Zignd.html-css-class-completion",
+				"ms-vscode.vscode-typescript-next",
+				"cweijan.vscode-mysql-client2",
+				"christian-kohler.npm-intellisense",
+				"christian-kohler.path-intellisense",
+				"esbenp.prettier-vscode",
+				"pflannery.vscode-versionlens",
+				"redhat.vscode-yaml"
 			]
 		}
 	},
