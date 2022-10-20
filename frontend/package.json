@@ -2,6 +2,7 @@
   "name": "movies-and-actors",
   "version": "0.0.0",
   "scripts": {
+    "build:frontend": "rm -rf ../backend/dist/front && mkdir ../backend/dist/front && ng build --configuration=production && mv dist/movies-and-actors/* ../backend/dist/front/",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
