@@ -31,7 +31,7 @@ import { MoviesServiceInterface } from './interfaces/movies.service.interface';
 import { HttpErrorMessage } from 'src/shared/entities/http-error-message.entity';
 
 @ApiTags('movies')
-@Controller('movies')
+@Controller('api/movies')
 export class MoviesController {
   constructor(
     @Inject('MovieServiceInterface')

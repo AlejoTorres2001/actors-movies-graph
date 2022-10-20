@@ -32,7 +32,7 @@ import { ReadAppearanceDto } from './dto/read-appearances.dto';
 import { Appearance } from './entities/appearance.entity';
 import { AppearancesServiceInterface } from './interfaces/apperances.service.interface';
 @ApiTags('appearances')
-@Controller('appearances')
+@Controller('api/appearances')
 export class AppearancesController {
   constructor(
     @Inject('AppearancesServiceInterface')
