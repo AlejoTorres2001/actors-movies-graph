@@ -13,19 +13,24 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GraphsService = void 0;
+const nestjs_1 = require("@automapper/nestjs");
 const common_1 = require("@nestjs/common");
+const dto_1 = require("../actors/dto");
+const actor_entity_1 = require("../actors/entities/actor.entity");
+const dto_2 = require("../movies/dto");
+const movies_entity_1 = require("../movies/entities/movies.entity");
 let GraphsService = class GraphsService {
-    constructor(appearancesRepository, actorsRepository, moviesRepository) {
+    constructor(appearancesRepository, actorsRepository, moviesRepository, classMapper) {
         this.appearancesRepository = appearancesRepository;
         this.actorsRepository = actorsRepository;
         this.moviesRepository = moviesRepository;
+        this.classMapper = classMapper;
     }
     async findPaths(createGraphInput) {
         const actorFrom = await this.findActorByName(createGraphInput.actorNameFrom);
         const actorTo = await this.findActorByName(createGraphInput.actorNameTo);
         const pathsFound = await this.BFS(actorFrom, actorTo);
         return {
-            id: 1,
             actorFrom: actorFrom,
             actorTo: actorTo,
             paths: pathsFound,
@@ -110,7 +115,7 @@ let GraphsService = class GraphsService {
         if (!actor) {
             return [];
         }
-        return actor.appearances.map((a) => a.movie);
+        return this.classMapper.mapArray(actor.appearances.map((a) => a.movie), movies_entity_1.Movie, dto_2.ReadMovieDto);
     }
     async getMovieActors(movieTitle) {
         const movie = await this.findMovieByTitle(movieTitle, [
@@ -120,7 +125,9 @@ let GraphsService = class GraphsService {
         if (!movie) {
             return [];
         }
-        return movie.appearances.map((a) => a.actor);
+        const foundActors = movie.appearances.map((a) => a.actor);
+        const array = this.classMapper.mapArray(foundActors, actor_entity_1.Actor, dto_1.ReadActorDto);
+        return array;
     }
 };
 GraphsService = __decorate([
@@ -128,7 +135,8 @@ GraphsService = __decorate([
     __param(0, (0, common_1.Inject)('AppearancesRepositoryInterface')),
     __param(1, (0, common_1.Inject)('ActorRepositoryInterface')),
     __param(2, (0, common_1.Inject)('MovieRepositoryInterface')),
-    __metadata("design:paramtypes", [Object, Object, Object])
+    __param(3, (0, nestjs_1.InjectMapper)()),
+    __metadata("design:paramtypes", [Object, Object, Object, Object])
 ], GraphsService);
 exports.GraphsService = GraphsService;
 //# sourceMappingURL=graphs.service.js.map

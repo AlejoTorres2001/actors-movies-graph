@@ -13,6 +13,7 @@ const actors_controller_1 = require("./actors.controller");
 const actor_entity_1 = require("./entities/actor.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const actors_repository_1 = require("../shared/repositories/actors.repository");
+const actor_profile_1 = require("../shared/profiles/actor-profile");
 let ActorsModule = class ActorsModule {
 };
 ActorsModule = __decorate([
@@ -28,6 +29,7 @@ ActorsModule = __decorate([
                 provide: 'ActorsServiceInterface',
                 useClass: actors_service_1.ActorsService,
             },
+            actor_profile_1.ActorProfile,
         ],
     })
 ], ActorsModule);

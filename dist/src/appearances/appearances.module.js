@@ -17,6 +17,7 @@ const appearances_repository_1 = require("../shared/repositories/appearances.rep
 const appearances_service_1 = require("./appearances.service");
 const actors_repository_1 = require("../shared/repositories/actors.repository");
 const movies_repository_1 = require("../shared/repositories/movies.repository");
+const appearance_profile_1 = require("../shared/profiles/appearance-profile");
 let AppearancesModule = class AppearancesModule {
 };
 AppearancesModule = __decorate([
@@ -40,6 +41,7 @@ AppearancesModule = __decorate([
                 provide: 'MovieRepositoryInterface',
                 useClass: movies_repository_1.MoviesRepository,
             },
+            appearance_profile_1.AppearanceProfile,
         ],
     })
 ], AppearancesModule);

@@ -13,17 +13,21 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActorsService = void 0;
+const nestjs_1 = require("@automapper/nestjs");
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
+const dto_1 = require("./dto");
+const actor_entity_1 = require("./entities/actor.entity");
 let ActorsService = class ActorsService {
-    constructor(actorsRepository) {
+    constructor(actorsRepository, classMapper) {
         this.actorsRepository = actorsRepository;
+        this.classMapper = classMapper;
     }
     async create(createActorDto) {
         const newActor = this.actorsRepository.create(createActorDto);
-        return await this.actorsRepository.save(newActor);
+        return this.classMapper.map(await this.actorsRepository.save(newActor), actor_entity_1.Actor, dto_1.ReadActorDto);
     }
-    async findAll({ limit, offset, name }) {
+    async findAll({ limit, offset, name, }) {
         const foundActors = name
             ? await this.actorsRepository.findAll({
                 where: { name: (0, typeorm_1.Like)(`%${name}%`) },
@@ -37,35 +41,36 @@ let ActorsService = class ActorsService {
                 skip: offset,
                 take: limit,
             });
-        return foundActors;
+        return this.classMapper.mapArray(foundActors, actor_entity_1.Actor, dto_1.ReadActorDto);
     }
     async findOne(id) {
         const foundActor = await this.actorsRepository.findOneById(id);
-        return foundActor;
+        return this.classMapper.map(foundActor, actor_entity_1.Actor, dto_1.ReadActorDto);
     }
     async update(id, updateActorDto) {
         const updatedActor = await this.actorsRepository.preload(Object.assign({ id: id }, updateActorDto));
         if (!updatedActor) {
             return undefined;
         }
-        return await this.actorsRepository.save(updatedActor);
+        return this.classMapper.map(await this.actorsRepository.save(updatedActor), actor_entity_1.Actor, dto_1.ReadActorDto);
     }
     async remove(id) {
         const foundActor = await this.actorsRepository.findOneById(id);
         if (!foundActor) {
             return undefined;
         }
-        return await this.actorsRepository.remove(foundActor);
+        return this.classMapper.map(await this.actorsRepository.remove(foundActor), actor_entity_1.Actor, dto_1.ReadActorDto);
     }
     async createMany(actors) {
         const newActors = this.actorsRepository.createMany(actors);
-        return await this.actorsRepository.saveMany(newActors);
+        return this.classMapper.mapArray(await this.actorsRepository.saveMany(newActors), actor_entity_1.Actor, dto_1.ReadActorDto);
     }
 };
 ActorsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)('ActorRepositoryInterface')),
-    __metadata("design:paramtypes", [Object])
+    __param(1, (0, nestjs_1.InjectMapper)()),
+    __metadata("design:paramtypes", [Object, Object])
 ], ActorsService);
 exports.ActorsService = ActorsService;
 //# sourceMappingURL=actors.service.js.map

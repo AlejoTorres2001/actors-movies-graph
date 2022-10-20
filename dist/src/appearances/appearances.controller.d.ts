@@ -1,13 +1,13 @@
 import { AppearancesQueryDto, CreateAppearanceDto, UpdateAppearanceDto } from './dto';
-import { Appearance } from './entities/appearance.entity';
+import { ReadAppearanceDto } from './dto/read-appearances.dto';
 import { AppearancesServiceInterface } from './interfaces/apperances.service.interface';
 export declare class AppearancesController {
     private readonly appearancesService;
     constructor(appearancesService: AppearancesServiceInterface);
-    create(createAppearanceDto: CreateAppearanceDto): Promise<Appearance>;
-    findAll(pagination: AppearancesQueryDto): Promise<Appearance[]>;
-    findOne(id: number): Promise<Appearance>;
-    update(id: number, updateAppearanceDto: UpdateAppearanceDto): Promise<Appearance>;
+    create(createAppearanceDto: CreateAppearanceDto): Promise<ReadAppearanceDto>;
+    findAll(pagination: AppearancesQueryDto): Promise<ReadAppearanceDto[]>;
+    findOne(id: number): Promise<ReadAppearanceDto>;
+    update(id: number, updateAppearanceDto: UpdateAppearanceDto): Promise<ReadAppearanceDto>;
     remove(id: number): Promise<void>;
-    createMany(createAppearanceDto: CreateAppearanceDto[]): Promise<Appearance[]>;
+    createMany(createAppearanceDto: CreateAppearanceDto[]): Promise<ReadAppearanceDto[]>;
 }

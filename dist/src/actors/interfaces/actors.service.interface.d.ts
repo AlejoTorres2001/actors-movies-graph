@@ -1,10 +1,9 @@
-import { ActorsQueryDto, CreateActorDto, UpdateActorDto } from '../dto';
-import { Actor } from '../entities/actor.entity';
+import { ActorsQueryDto, CreateActorDto, ReadActorDto, UpdateActorDto } from '../dto';
 export interface ActorsServiceInterface {
-    create(createActorDto: CreateActorDto): Promise<Actor>;
-    findAll(actorsQueryDto: ActorsQueryDto): Promise<Actor[]>;
-    findOne(id: number): Promise<Actor>;
-    update(id: number, updateActorDto: UpdateActorDto): Promise<Actor>;
-    remove(id: number): Promise<Actor>;
-    createMany(createActorDto: CreateActorDto[]): Promise<Actor[]>;
+    create(createActorDto: CreateActorDto): Promise<ReadActorDto>;
+    findAll(actorsQueryDto: ActorsQueryDto): Promise<ReadActorDto[]>;
+    findOne(id: number): Promise<ReadActorDto>;
+    update(id: number, updateActorDto: UpdateActorDto): Promise<ReadActorDto>;
+    remove(id: number): Promise<ReadActorDto>;
+    createMany(createActorDto: CreateActorDto[]): Promise<ReadActorDto[]>;
 }

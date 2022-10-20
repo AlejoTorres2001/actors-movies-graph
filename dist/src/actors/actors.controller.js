@@ -96,7 +96,7 @@ let ActorsController = class ActorsController {
     }
 };
 __decorate([
-    (0, swagger_1.ApiCreatedResponse)({ type: actor_entity_1.Actor }),
+    (0, swagger_1.ApiCreatedResponse)({ type: dto_1.ReadActorDto }),
     (0, swagger_1.ApiInternalServerErrorResponse)({ type: http_error_message_entity_1.HttpErrorMessage }),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
@@ -105,7 +105,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ActorsController.prototype, "create", null);
 __decorate([
-    (0, swagger_1.ApiCreatedResponse)({ type: [actor_entity_1.Actor] }),
+    (0, swagger_1.ApiCreatedResponse)({ type: [dto_1.ReadActorDto] }),
     (0, swagger_1.ApiInternalServerErrorResponse)({ type: http_error_message_entity_1.HttpErrorMessage }),
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)()),
@@ -160,7 +160,7 @@ __decorate([
 ], ActorsController.prototype, "remove", null);
 __decorate([
     (0, common_1.Post)('/many'),
-    (0, swagger_1.ApiCreatedResponse)({ type: [actor_entity_1.Actor] }),
+    (0, swagger_1.ApiCreatedResponse)({ type: [dto_1.ReadActorDto] }),
     (0, swagger_1.ApiInternalServerErrorResponse)({ type: http_error_message_entity_1.HttpErrorMessage }),
     (0, swagger_1.ApiBody)({ type: [dto_1.CreateActorDto] }),
     __param(0, (0, common_1.Body)()),

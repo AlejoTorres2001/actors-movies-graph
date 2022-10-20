@@ -1,13 +1,12 @@
-import { ActorsQueryDto, CreateActorDto, UpdateActorDto } from './dto';
-import { Actor } from './entities/actor.entity';
+import { ActorsQueryDto, CreateActorDto, ReadActorDto, UpdateActorDto } from './dto';
 import { ActorsServiceInterface } from './interfaces/actors.service.interface';
 export declare class ActorsController {
     private readonly actorsService;
     constructor(actorsService: ActorsServiceInterface);
-    create(createActorDto: CreateActorDto): Promise<Actor>;
-    findAll(pagination: ActorsQueryDto): Promise<Actor[]>;
-    findOne(id: number): Promise<Actor>;
-    update(id: number, updateActorDto: UpdateActorDto): Promise<Actor>;
+    create(createActorDto: CreateActorDto): Promise<ReadActorDto>;
+    findAll(pagination: ActorsQueryDto): Promise<ReadActorDto[]>;
+    findOne(id: number): Promise<ReadActorDto>;
+    update(id: number, updateActorDto: UpdateActorDto): Promise<ReadActorDto>;
     remove(id: number): Promise<void>;
-    createMany(actors: CreateActorDto[]): Promise<Actor[]>;
+    createMany(actors: CreateActorDto[]): Promise<ReadActorDto[]>;
 }

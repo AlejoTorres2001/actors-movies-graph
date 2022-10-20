@@ -1,14 +1,15 @@
-import { ActorsQueryDto, CreateActorDto, UpdateActorDto } from './dto';
-import { Actor } from './entities/actor.entity';
+import { Mapper } from '@automapper/core';
+import { ActorsQueryDto, CreateActorDto, ReadActorDto, UpdateActorDto } from './dto';
 import { ActorRepositoryInterface } from './interfaces/actors.repository.interface';
 import { ActorsServiceInterface } from './interfaces/actors.service.interface';
 export declare class ActorsService implements ActorsServiceInterface {
     private readonly actorsRepository;
-    constructor(actorsRepository: ActorRepositoryInterface);
-    create(createActorDto: CreateActorDto): Promise<Actor>;
-    findAll({ limit, offset, name }: ActorsQueryDto): Promise<Actor[]>;
-    findOne(id: number): Promise<Actor>;
-    update(id: number, updateActorDto: UpdateActorDto): Promise<Actor>;
-    remove(id: number): Promise<Actor>;
-    createMany(actors: CreateActorDto[]): Promise<Actor[]>;
+    private readonly classMapper;
+    constructor(actorsRepository: ActorRepositoryInterface, classMapper: Mapper);
+    create(createActorDto: CreateActorDto): Promise<ReadActorDto>;
+    findAll({ limit, offset, name, }: ActorsQueryDto): Promise<ReadActorDto[]>;
+    findOne(id: number): Promise<ReadActorDto>;
+    update(id: number, updateActorDto: UpdateActorDto): Promise<ReadActorDto>;
+    remove(id: number): Promise<ReadActorDto>;
+    createMany(actors: CreateActorDto[]): Promise<ReadActorDto[]>;
 }

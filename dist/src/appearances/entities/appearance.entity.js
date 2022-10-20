@@ -15,12 +15,14 @@ const movies_entity_1 = require("../../movies/entities/movies.entity");
 const typeorm_1 = require("typeorm");
 const graphql_1 = require("@nestjs/graphql");
 const swagger_1 = require("@nestjs/swagger");
+const classes_1 = require("@automapper/classes");
 let Appearance = class Appearance {
 };
 __decorate([
     (0, graphql_1.Field)((type) => graphql_1.Int),
     (0, typeorm_1.PrimaryGeneratedColumn)('increment'),
     (0, swagger_1.ApiProperty)(),
+    (0, classes_1.AutoMap)(),
     __metadata("design:type", Number)
 ], Appearance.prototype, "id", void 0);
 __decorate([
@@ -28,6 +30,7 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => actor_entity_1.Actor, (actor) => actor.appearances, { cascade: true }),
     (0, typeorm_1.JoinColumn)({ name: 'actor_id' }),
     (0, swagger_1.ApiProperty)({ type: () => actor_entity_1.Actor }),
+    (0, classes_1.AutoMap)(() => actor_entity_1.Actor),
     __metadata("design:type", actor_entity_1.Actor)
 ], Appearance.prototype, "actor", void 0);
 __decorate([
@@ -35,6 +38,7 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => movies_entity_1.Movie, (movie) => movie.appearances, { cascade: true }),
     (0, typeorm_1.JoinColumn)({ name: 'movie_id' }),
     (0, swagger_1.ApiProperty)({ type: () => movies_entity_1.Movie }),
+    (0, classes_1.AutoMap)(() => movies_entity_1.Movie),
     __metadata("design:type", movies_entity_1.Movie)
 ], Appearance.prototype, "movie", void 0);
 Appearance = __decorate([

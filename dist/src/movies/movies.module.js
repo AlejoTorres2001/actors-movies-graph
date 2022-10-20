@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MoviesModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const movie_profiler_1 = require("../shared/profiles/movie-profiler");
 const movies_repository_1 = require("../shared/repositories/movies.repository");
 const movies_entity_1 = require("./entities/movies.entity");
 const movies_controller_1 = require("./movies.controller");
@@ -28,6 +29,7 @@ MoviesModule = __decorate([
                 provide: 'MovieServiceInterface',
                 useClass: movies_service_1.MoviesService,
             },
+            movie_profiler_1.MovieProfile,
         ],
     })
 ], MoviesModule);

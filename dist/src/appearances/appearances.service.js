@@ -13,14 +13,18 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppearancesService = void 0;
+const nestjs_1 = require("@automapper/nestjs");
 const common_1 = require("@nestjs/common");
+const read_appearances_dto_1 = require("./dto/read-appearances.dto");
+const appearance_entity_1 = require("./entities/appearance.entity");
 let AppearancesService = class AppearancesService {
-    constructor(appearancesRepository, actorsRepository, moviesRepository) {
+    constructor(appearancesRepository, actorsRepository, moviesRepository, classMapper) {
         this.appearancesRepository = appearancesRepository;
         this.actorsRepository = actorsRepository;
         this.moviesRepository = moviesRepository;
+        this.classMapper = classMapper;
     }
-    async create({ actorId, movieId }) {
+    async create({ actorId, movieId, }) {
         const actor = await this.actorsRepository.findOneById(actorId);
         const movie = await this.moviesRepository.findOneById(movieId);
         if (!actor || !movie) {
@@ -30,21 +34,21 @@ let AppearancesService = class AppearancesService {
             actor,
             movie,
         });
-        return await this.appearancesRepository.save(newAppearance);
+        return this.classMapper.map(await this.appearancesRepository.save(newAppearance), appearance_entity_1.Appearance, read_appearances_dto_1.ReadAppearanceDto);
     }
-    async findAll({ limit, offset }) {
-        return await this.appearancesRepository.findWithRelations({
+    async findAll({ limit, offset, }) {
+        return this.classMapper.mapArray(await this.appearancesRepository.findWithRelations({
             relations: ['actor', 'movie'],
             skip: offset,
             take: limit,
-        });
+        }), appearance_entity_1.Appearance, read_appearances_dto_1.ReadAppearanceDto);
     }
     async findOne(id) {
         const foundAppearance = await this.appearancesRepository.findByCondition({
             where: { id: id },
             relations: ['actor', 'movie'],
         });
-        return foundAppearance;
+        return this.classMapper.map(foundAppearance, appearance_entity_1.Appearance, read_appearances_dto_1.ReadAppearanceDto);
     }
     async update(id, updateAppearanceDto) {
         const appearance = await this.findOne(id);
@@ -58,14 +62,14 @@ let AppearancesService = class AppearancesService {
         }
         appearance.actor = actor;
         appearance.movie = movie;
-        return await this.appearancesRepository.save(appearance);
+        return this.classMapper.map(await this.appearancesRepository.save(appearance), appearance_entity_1.Appearance, read_appearances_dto_1.ReadAppearanceDto);
     }
     async remove(id) {
         const foundAppearance = await this.appearancesRepository.findOneById(id);
         if (!foundAppearance) {
             return undefined;
         }
-        return await this.appearancesRepository.remove(foundAppearance);
+        return this.classMapper.map(await this.appearancesRepository.remove(foundAppearance), appearance_entity_1.Appearance, read_appearances_dto_1.ReadAppearanceDto);
     }
     async createMany(appearances) {
         const actors = await this.actorsRepository.findAll();
@@ -78,7 +82,7 @@ let AppearancesService = class AppearancesService {
                 movie,
             });
         });
-        return await this.appearancesRepository.saveMany(newAppearances);
+        return this.classMapper.mapArray(await this.appearancesRepository.saveMany(newAppearances), appearance_entity_1.Appearance, read_appearances_dto_1.ReadAppearanceDto);
     }
 };
 AppearancesService = __decorate([
@@ -86,7 +90,8 @@ AppearancesService = __decorate([
     __param(0, (0, common_1.Inject)('AppearancesRepositoryInterface')),
     __param(1, (0, common_1.Inject)('ActorRepositoryInterface')),
     __param(2, (0, common_1.Inject)('MovieRepositoryInterface')),
-    __metadata("design:paramtypes", [Object, Object, Object])
+    __param(3, (0, nestjs_1.InjectMapper)()),
+    __metadata("design:paramtypes", [Object, Object, Object, Object])
 ], AppearancesService);
 exports.AppearancesService = AppearancesService;
 //# sourceMappingURL=appearances.service.js.map

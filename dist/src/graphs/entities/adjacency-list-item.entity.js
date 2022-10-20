@@ -10,14 +10,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdjacencyListItem = void 0;
-const actor_entity_1 = require("../../actors/entities/actor.entity");
 const graphql_1 = require("@nestjs/graphql");
 const neighbor_entity_1 = require("./neighbor.entity");
+const dto_1 = require("../../actors/dto");
 let AdjacencyListItem = class AdjacencyListItem {
 };
 __decorate([
-    (0, graphql_1.Field)((type) => actor_entity_1.Actor),
-    __metadata("design:type", actor_entity_1.Actor)
+    (0, graphql_1.Field)((type) => dto_1.ReadActorDto),
+    __metadata("design:type", dto_1.ReadActorDto)
 ], AdjacencyListItem.prototype, "actor", void 0);
 __decorate([
     (0, graphql_1.Field)((type) => [neighbor_entity_1.Neighbor]),

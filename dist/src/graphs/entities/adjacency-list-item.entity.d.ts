@@ -1,6 +1,6 @@
-import { Actor } from 'src/actors/entities/actor.entity';
 import { Neighbor } from './neighbor.entity';
+import { ReadActorDto } from 'src/actors/dto';
 export declare class AdjacencyListItem {
-    actor: Actor;
+    actor: ReadActorDto;
     neighbors: Neighbor[];
 }

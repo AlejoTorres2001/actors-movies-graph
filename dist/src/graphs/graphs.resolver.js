@@ -16,8 +16,8 @@ exports.GraphsResolver = void 0;
 const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
 const graphql_2 = require("graphql");
-const actor_entity_1 = require("../actors/entities/actor.entity");
-const movies_entity_1 = require("../movies/entities/movies.entity");
+const dto_1 = require("../actors/dto");
+const dto_2 = require("../movies/dto");
 const entities_1 = require("./entities");
 let GraphsResolver = class GraphsResolver {
     constructor(graphsService) {
@@ -84,14 +84,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], GraphsResolver.prototype, "generateGraph", null);
 __decorate([
-    (0, graphql_1.Query)((returns) => [movies_entity_1.Movie]),
+    (0, graphql_1.Query)((returns) => [dto_2.ReadMovieDto]),
     __param(0, (0, graphql_1.Args)('actorName')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], GraphsResolver.prototype, "getActorMovies", null);
 __decorate([
-    (0, graphql_1.Query)((returns) => [actor_entity_1.Actor]),
+    (0, graphql_1.Query)((returns) => [dto_1.ReadActorDto]),
     __param(0, (0, graphql_1.Args)('movieTitle')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

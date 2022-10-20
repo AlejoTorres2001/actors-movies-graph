@@ -96,7 +96,7 @@ let MoviesController = class MoviesController {
     }
 };
 __decorate([
-    (0, swagger_1.ApiCreatedResponse)({ type: [movies_entity_1.Movie] }),
+    (0, swagger_1.ApiCreatedResponse)({ type: [dto_1.ReadMovieDto] }),
     (0, swagger_1.ApiInternalServerErrorResponse)({ type: http_error_message_entity_1.HttpErrorMessage }),
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)()),
@@ -111,7 +111,7 @@ __decorate([
         required: true,
         description: 'Id of the movie',
     }),
-    (0, swagger_1.ApiCreatedResponse)({ type: movies_entity_1.Movie }),
+    (0, swagger_1.ApiCreatedResponse)({ type: dto_1.ReadMovieDto }),
     (0, swagger_1.ApiNotFoundResponse)({ type: http_error_message_entity_1.HttpErrorMessage }),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
@@ -120,7 +120,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], MoviesController.prototype, "getMovieById", null);
 __decorate([
-    (0, swagger_1.ApiCreatedResponse)({ type: movies_entity_1.Movie }),
+    (0, swagger_1.ApiCreatedResponse)({ type: dto_1.ReadMovieDto }),
     (0, swagger_1.ApiInternalServerErrorResponse)({ type: http_error_message_entity_1.HttpErrorMessage }),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
@@ -129,7 +129,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], MoviesController.prototype, "createMovie", null);
 __decorate([
-    (0, swagger_1.ApiCreatedResponse)({ type: movies_entity_1.Movie }),
+    (0, swagger_1.ApiCreatedResponse)({ type: dto_1.ReadMovieDto }),
     (0, swagger_1.ApiNotFoundResponse)({ type: http_error_message_entity_1.HttpErrorMessage }),
     (0, swagger_1.ApiBody)({ type: dto_1.updateMovieDto }),
     (0, swagger_1.ApiParam)({
