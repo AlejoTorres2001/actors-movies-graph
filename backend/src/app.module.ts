@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ActorsModule } from './actors/actors.module';
 import { AppearancesModule } from './appearances/appearances.module';
-import { AppController } from './app.controller';
 import { GraphsModule } from './graphs/graphs.module';
 import { ApiLog } from './shared/entities/api-log.entity';
 import { LoggingInterceptor } from './shared/interceptors/logger.interceptor';
@@ -16,8 +15,13 @@ import { dataSourceOptions } from 'db/data-source';
 import configuration from '../config/configuration';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'front'),
+    }),
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
     }),
@@ -34,7 +38,7 @@ import { classes } from '@automapper/classes';
     TypeOrmModule.forFeature([ApiLog]),
     TypeOrmModule.forFeature([Exception]),
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
     {
       provide: 'APP_INTERCEPTOR',
