@@ -3,13 +3,17 @@ import {
   CreateAppearanceDto,
   UpdateAppearanceDto,
 } from '../dto';
-import { Appearance } from '../entities/appearance.entity';
-
+import { ReadAppearanceDto } from '../dto/read-appearances.dto';
 export interface AppearancesServiceInterface {
-  create(createActorDto: CreateAppearanceDto): Promise<Appearance>;
-  findAll(actorsQueryDto: AppearancesQueryDto): Promise<Appearance[]>;
-  findOne(id: number): Promise<Appearance>;
-  update(id: number, updateActorDto: UpdateAppearanceDto): Promise<Appearance>;
-  remove(id: number): Promise<Appearance>;
-  createMany(createActorDto: CreateAppearanceDto[]): Promise<Appearance[]>;
+  create(createActorDto: CreateAppearanceDto): Promise<ReadAppearanceDto>;
+  findAll(actorsQueryDto: AppearancesQueryDto): Promise<ReadAppearanceDto[]>;
+  findOne(id: number): Promise<ReadAppearanceDto>;
+  update(
+    id: number,
+    updateActorDto: UpdateAppearanceDto,
+  ): Promise<ReadAppearanceDto>;
+  remove(id: number): Promise<ReadAppearanceDto>;
+  createMany(
+    createActorDto: CreateAppearanceDto[],
+  ): Promise<ReadAppearanceDto[]>;
 }

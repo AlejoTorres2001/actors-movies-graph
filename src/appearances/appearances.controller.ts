@@ -28,6 +28,7 @@ import {
   CreateAppearanceDto,
   UpdateAppearanceDto,
 } from './dto';
+import { ReadAppearanceDto } from './dto/read-appearances.dto';
 import { Appearance } from './entities/appearance.entity';
 import { AppearancesServiceInterface } from './interfaces/apperances.service.interface';
 @ApiTags('appearances')
@@ -44,8 +45,8 @@ export class AppearancesController {
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   async create(
     @Body() createAppearanceDto: CreateAppearanceDto,
-  ): Promise<Appearance> {
-    let createdAppearance: Appearance;
+  ): Promise<ReadAppearanceDto> {
+    let createdAppearance: ReadAppearanceDto;
     try {
       createdAppearance = await this.appearancesService.create(
         createAppearanceDto,
@@ -62,13 +63,13 @@ export class AppearancesController {
   }
   @Get()
   @ApiResponse({
-    type: Appearance,
+    type: ReadAppearanceDto,
   })
   @ApiInternalServerErrorResponse({ type: HttpErrorMessage })
   async findAll(
     @Query() pagination: AppearancesQueryDto,
-  ): Promise<Appearance[]> {
-    let foundAppearances: Appearance[];
+  ): Promise<ReadAppearanceDto[]> {
+    let foundAppearances: ReadAppearanceDto[];
     try {
       foundAppearances = await this.appearancesService.findAll(pagination);
     } catch (error) {
@@ -92,8 +93,10 @@ export class AppearancesController {
     required: true,
     description: 'Id of the appearance',
   })
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Appearance> {
-    let foundAppearance: Appearance;
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ReadAppearanceDto> {
+    let foundAppearance: ReadAppearanceDto;
     try {
       foundAppearance = await this.appearancesService.findOne(id);
     } catch (error) {
@@ -119,8 +122,8 @@ export class AppearancesController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAppearanceDto: UpdateAppearanceDto,
-  ): Promise<Appearance> {
-    let updatedAppearance: Appearance;
+  ): Promise<ReadAppearanceDto> {
+    let updatedAppearance: ReadAppearanceDto;
     try {
       updatedAppearance = await this.appearancesService.update(
         id,
@@ -147,7 +150,7 @@ export class AppearancesController {
   })
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    let removedAppearance: Appearance;
+    let removedAppearance: ReadAppearanceDto;
     try {
       removedAppearance = await this.appearancesService.remove(id);
     } catch (error) {
@@ -164,7 +167,7 @@ export class AppearancesController {
     type: HttpErrorMessage,
   })
   async createMany(@Body() createAppearanceDto: CreateAppearanceDto[]) {
-    let createdAppearances: Appearance[];
+    let createdAppearances: ReadAppearanceDto[];
     try {
       createdAppearances = await this.appearancesService.createMany(
         createAppearanceDto,
