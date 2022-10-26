@@ -17,7 +17,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.9.1
         with:
           access_token: ${{ github.token }}
-  lint:
+  lint_frontend:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
@@ -27,6 +27,24 @@ jobs:
         with:
           cache: "npm"
           node-version: "16.15.0"
+      - name: go to frontend
+        run: cd frontend
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund --no-optional
+      - name: Lint
+        run: npm run lint
+  lint_backend:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          cache: "npm"
+          node-version: "16.15.0"
+      - name: go to backend
+        run: cd backend
       - name: Install dependencies
         run: npm install --no-audit --no-fund --no-optional
       - name: Lint
