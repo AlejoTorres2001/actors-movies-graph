@@ -27,12 +27,10 @@ jobs:
         with:
           cache: "npm"
           node-version: "16.15.0"
-      - name: go to frontend
-        run: cd frontend
       - name: Install dependencies
         run: npm install --no-audit --no-fund --no-optional
       - name: Lint
-        run: npm run lint
+        run: npm run lint:frontend
   lint_backend:
     runs-on: ubuntu-18.04
     steps:
@@ -43,12 +41,10 @@ jobs:
         with:
           cache: "npm"
           node-version: "16.15.0"
-      - name: go to backend
-        run: cd backend
       - name: Install dependencies
         run: npm install --no-audit --no-fund --no-optional
       - name: Lint
-        run: npm run lint
+        run: npm run lint:backend
   deploy:
     runs-on: ubuntu-18.04
     steps:
