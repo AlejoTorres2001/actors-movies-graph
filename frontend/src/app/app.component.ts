@@ -14,9 +14,12 @@ export class AppComponent implements OnInit {
     name: string;
     birthYear: number;
   }[] = [];
-  constructor(private actorService: ActorService) { }
+  constructor(private actorService: ActorService) {}
 
   ngOnInit() {
-    this.actorService.get().pipe(take(1)).subscribe(actors => this.actors = actors);
+    this.actorService
+      .get()
+      .pipe(take(1))
+      .subscribe(actors => (this.actors = actors));
   }
 }

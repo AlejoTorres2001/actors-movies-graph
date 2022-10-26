@@ -4,13 +4,12 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ActorService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   get(): Observable<any[]> {
-    return this.http.get<any[]>(environment.backendUrl + '/actors')
+    return this.http.get<any[]>(environment.backendUrl + '/actors');
   }
 }
