@@ -23,6 +23,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: go to frontend
+        run: cd ./frontend
       - uses: actions/setup-node@v2
         with:
           cache: "npm"
@@ -37,6 +39,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: go to backend
+        run: cd ./backend
       - uses: actions/setup-node@v2
         with:
           cache: "npm"
@@ -44,7 +48,7 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund --no-optional
       - name: Lint
-        run: npm run lint:backend
+        run: npm run lint
   deploy:
     runs-on: ubuntu-18.04
     steps:
