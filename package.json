@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "heroku-prebuild": "(cd ./backend && npm install && npm run build && cd ../frontend && npm install && npm run build:frontend)",
+    "heroku-prebuild": "(rm package-lock.json && cd ./backend && npm install && npm run build && cd ../frontend && npm install && npm run build:frontend)",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "(cd ./backend && npm run start)",
     "start:dev": "nest start --watch",
