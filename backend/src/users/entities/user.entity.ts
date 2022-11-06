@@ -1,15 +1,24 @@
+import { AutoMap } from '@automapper/classes';
 import * as bcrypt from 'bcrypt';
-import { IsEmail } from 'class-validator';
+import { IsAscii, IsEmail, MinLength } from 'class-validator';
 import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  userId: string;
+  @AutoMap()
+  id: string;
   @Column({ unique: true })
   @IsEmail()
+  @AutoMap()
   email: string;
-  @Column({ type: 'varchar', length: 70, nullable: true })
+  @Column({ unique: true })
+  @AutoMap()
+  @IsAscii()
+  username: string;
+  @MinLength(8)
+  @Column({ type: 'varchar', length: 70 })
+  @AutoMap()
   password: string;
   @BeforeInsert()
   async hashPassword() {

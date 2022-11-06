@@ -4,7 +4,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsAscii, IsNumber, IsOptional } from 'class-validator';
 @ObjectType()
 export class ReadActorDto {
-  @AutoMap()
   @ApiProperty({ required: true })
   @AutoMap()
   @Field((type) => Int)
