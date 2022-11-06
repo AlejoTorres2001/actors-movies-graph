@@ -26,6 +26,7 @@ const nestjs_1 = require("@automapper/nestjs");
 const classes_1 = require("@automapper/classes");
 const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
+const users_module_1 = require("./users/users.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -49,6 +50,7 @@ AppModule = __decorate([
             graphs_module_1.GraphsModule,
             typeorm_1.TypeOrmModule.forFeature([api_log_entity_1.ApiLog]),
             typeorm_1.TypeOrmModule.forFeature([exception_entity_1.Exception]),
+            users_module_1.UsersModule,
         ],
         controllers: [],
         providers: [
