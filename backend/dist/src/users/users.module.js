@@ -12,13 +12,25 @@ const users_service_1 = require("./users.service");
 const users_controller_1 = require("./users.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const user_entity_1 = require("./entities/user.entity");
+const users_repository_1 = require("../shared/repositories/users.repository");
+const user_profile_1 = require("../shared/profiles/user-profile");
 let UsersModule = class UsersModule {
 };
 UsersModule = __decorate([
     (0, common_1.Module)({
-        controllers: [users_controller_1.UsersController],
-        providers: [users_service_1.UsersService],
         imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.User])],
+        controllers: [users_controller_1.UsersController],
+        providers: [
+            {
+                provide: 'UsersRepositoryInterface',
+                useClass: users_repository_1.UsersRepository,
+            },
+            {
+                provide: 'UsersServiceInterface',
+                useClass: users_service_1.UsersService,
+            },
+            user_profile_1.UserProfile,
+        ],
     })
 ], UsersModule);
 exports.UsersModule = UsersModule;

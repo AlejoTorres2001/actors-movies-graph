@@ -9,29 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUserDto = void 0;
-const classes_1 = require("@automapper/classes");
+exports.UsersQueryDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-class CreateUserDto {
+const index_1 = require("../../shared/dto/index");
+class UsersQueryDto extends index_1.PaginationQueryDto {
 }
 __decorate([
-    (0, swagger_1.ApiProperty)({ required: true }),
-    (0, class_validator_1.IsEmail)(),
-    (0, classes_1.AutoMap)(),
-    __metadata("design:type", String)
-], CreateUserDto.prototype, "email", void 0);
-__decorate([
-    (0, class_validator_1.MinLength)(8),
-    (0, swagger_1.ApiProperty)({ required: true }),
-    (0, classes_1.AutoMap)(),
-    __metadata("design:type", String)
-], CreateUserDto.prototype, "password", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ required: true }),
-    (0, classes_1.AutoMap)(),
+    (0, swagger_1.ApiProperty)({
+        required: false,
+        description: 'Email substring of the user',
+        type: String,
+    }),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsAscii)(),
     __metadata("design:type", String)
-], CreateUserDto.prototype, "username", void 0);
-exports.CreateUserDto = CreateUserDto;
-//# sourceMappingURL=create-user.dto.js.map
+], UsersQueryDto.prototype, "username", void 0);
+exports.UsersQueryDto = UsersQueryDto;
+//# sourceMappingURL=users-query.dto.js.map

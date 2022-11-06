@@ -9,51 +9,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.ReadUserDto = void 0;
 const classes_1 = require("@automapper/classes");
-const bcrypt = require("bcrypt");
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const typeorm_1 = require("typeorm");
-let User = class User {
-    async hashPassword() {
-        const salt = await bcrypt.genSalt();
-        this.password = await bcrypt.hash(this.password, salt);
-    }
-    async validatePassword(password) {
-        return await bcrypt.compare(password, this.password);
-    }
-};
+class ReadUserDto {
+}
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    (0, swagger_1.ApiProperty)({ required: true }),
     (0, classes_1.AutoMap)(),
     __metadata("design:type", String)
-], User.prototype, "id", void 0);
+], ReadUserDto.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, swagger_1.ApiProperty)({ required: true }),
     (0, class_validator_1.IsEmail)(),
     (0, classes_1.AutoMap)(),
     __metadata("design:type", String)
-], User.prototype, "email", void 0);
+], ReadUserDto.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, swagger_1.ApiProperty)({ required: true }),
     (0, classes_1.AutoMap)(),
     (0, class_validator_1.IsAscii)(),
     __metadata("design:type", String)
-], User.prototype, "username", void 0);
-__decorate([
-    (0, class_validator_1.MinLength)(8),
-    (0, typeorm_1.Column)({ type: 'varchar', length: 70 }),
-    (0, classes_1.AutoMap)(),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.BeforeInsert)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], User.prototype, "hashPassword", null);
-User = __decorate([
-    (0, typeorm_1.Entity)({ name: 'users' })
-], User);
-exports.User = User;
-//# sourceMappingURL=user.entity.js.map
+], ReadUserDto.prototype, "username", void 0);
+exports.ReadUserDto = ReadUserDto;
+//# sourceMappingURL=read-user.dto.js.map

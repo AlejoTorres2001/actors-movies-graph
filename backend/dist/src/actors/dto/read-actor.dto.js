@@ -17,7 +17,6 @@ const class_validator_1 = require("class-validator");
 let ReadActorDto = class ReadActorDto {
 };
 __decorate([
-    (0, classes_1.AutoMap)(),
     (0, swagger_1.ApiProperty)({ required: true }),
     (0, classes_1.AutoMap)(),
     (0, graphql_1.Field)((type) => graphql_1.Int),
