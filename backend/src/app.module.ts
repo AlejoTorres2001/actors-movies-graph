@@ -17,6 +17,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -37,6 +38,7 @@ import { join } from 'path';
     GraphsModule,
     TypeOrmModule.forFeature([ApiLog]),
     TypeOrmModule.forFeature([Exception]),
+    UsersModule,
   ],
   controllers: [],
   providers: [
