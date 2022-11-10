@@ -20,5 +20,6 @@ import { UserProfile } from 'src/shared/profiles/user-profile';
     },
     UserProfile,
   ],
+  exports: ['UsersServiceInterface'],
 })
 export class UsersModule {}

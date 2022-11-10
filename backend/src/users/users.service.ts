@@ -43,7 +43,6 @@ export class UsersService implements UsersServiceInterface {
           skip: offset,
           take: limit,
         });
-    console.log(foundUser);
     return this.classMapper.mapArray(foundUser, User, ReadUserDto);
   }
   async findOne(id: string): Promise<ReadUserDto> {
@@ -85,5 +84,17 @@ export class UsersService implements UsersServiceInterface {
       User,
       ReadUserDto,
     );
+  }
+  async getUserByUserName(username: string): Promise<User> {
+    const foundUser = await this.usersRepository.findByCondition({
+      where: { username },
+    });
+    return foundUser;
+  }
+  async getUserByEmail(email: string): Promise<User> {
+    const foundUser = await this.usersRepository.findByCondition({
+      where: { email },
+    });
+    return foundUser;
   }
 }
