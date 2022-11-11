@@ -2,11 +2,16 @@ import {
   Body,
   ConflictException,
   Controller,
+  HttpCode,
+  HttpStatus,
   InternalServerErrorException,
-  Param,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 import { AuthService } from './auth.service';
@@ -17,6 +22,7 @@ import { Tokens } from './dto/tokens.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('/local/signup')
+  @HttpCode(HttpStatus.CREATED)
   async signUpLocal(@Body() createUserDto: CreateUserDto): Promise<Tokens> {
     try {
       return await this.authService.signUpLocal(createUserDto);
@@ -28,6 +34,7 @@ export class AuthController {
     }
   }
   @Post('/local/signin')
+  @HttpCode(HttpStatus.OK)
   async signInLocal(@Body() loginDTO: LoginDTO): Promise<Tokens> {
     try {
       return await this.authService.signInLocal(loginDTO);
@@ -35,15 +42,20 @@ export class AuthController {
       throw error;
     }
   }
-  @Post('/logout/:userId')
-  async logout(@Param('userId') userId: string) {
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@Req() req: Request) {
+    const user = req.user;
     try {
-      return await this.authService.logout(userId);
+      return await this.authService.logout(user['userId']);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
+  @UseGuards(AuthGuard('jwt-refresh'))
   @Post('/refresh')
+  @HttpCode(HttpStatus.OK)
   async refreshTokens() {
     try {
       return await this.authService.refreshTokens();

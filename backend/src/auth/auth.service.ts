@@ -57,7 +57,7 @@ export class AuthService implements IAuthService {
   }
   async refreshTokens() {}
   private async updateRefreshToken(
-    userId,
+    userId: string,
     refreshToken: string,
   ): Promise<void> {
     const user = await this.usersService.findOne(userId);
