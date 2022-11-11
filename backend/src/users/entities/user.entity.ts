@@ -1,8 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import * as bcrypt from 'bcrypt';
-import { IsAscii, IsEmail, MinLength } from 'class-validator';
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import { IsAlphanumeric, IsEmail, MinLength } from 'class-validator';
+import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -14,7 +14,7 @@ export class User {
   email: string;
   @Column({ unique: true })
   @AutoMap()
-  @IsAscii()
+  @IsAlphanumeric()
   username: string;
   @MinLength(8)
   @Column({ type: 'varchar', length: 70 })
@@ -24,6 +24,19 @@ export class User {
   async hashPassword() {
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);
+  }
+  @Column({ nullable: true })
+  @Exclude()
+  @AutoMap()
+  public hashedRefreshToken?: string;
+  @BeforeUpdate()
+  @BeforeInsert()
+  async hashRefreshToken() {
+    const salt = await bcrypt.genSalt(10);
+    this.hashedRefreshToken = this.hashedRefreshToken
+      ? await bcrypt.hash(this.hashedRefreshToken, salt)
+      : null;
+    console.log(this.hashedRefreshToken);
   }
   async validatePassword(password: string): Promise<boolean> {
     return await bcrypt.compare(password, this.password);
