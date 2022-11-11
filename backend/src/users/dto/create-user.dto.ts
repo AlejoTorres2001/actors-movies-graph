@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsAscii, IsEmail, MinLength } from 'class-validator';
+import { IsAlphanumeric, IsEmail, MinLength } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({ required: true })
@@ -13,6 +13,6 @@ export class CreateUserDto {
   password: string;
   @ApiProperty({ required: true })
   @AutoMap()
-  @IsAscii()
+  @IsAlphanumeric()
   username: string;
 }

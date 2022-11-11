@@ -10,6 +10,7 @@ import {
   Query,
   NotFoundException,
   Put,
+  ConflictException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -40,6 +41,9 @@ export class UsersController {
     try {
       return await this.usersService.create(createUserDto);
     } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException('Username already exists');
+      }
       throw new InternalServerErrorException(error);
     }
   }
