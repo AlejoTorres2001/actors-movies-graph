@@ -1,7 +1,13 @@
 import { AutoMap } from '@automapper/classes';
 import * as bcrypt from 'bcrypt';
 import { IsAlphanumeric, IsEmail, MinLength } from 'class-validator';
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Exclude } from 'class-transformer';
 @Entity({ name: 'users' })
 export class User {
