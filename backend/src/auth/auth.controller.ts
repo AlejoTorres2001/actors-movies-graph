@@ -21,7 +21,7 @@ import { Tokens } from './dto/tokens.dto';
 @Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-  @Post('/local/signup')
+  @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
   async signUpLocal(@Body() createUserDto: CreateUserDto): Promise<Tokens> {
     try {
@@ -33,7 +33,7 @@ export class AuthController {
       throw new InternalServerErrorException(error);
     }
   }
-  @Post('/local/signin')
+  @Post('local/signin')
   @HttpCode(HttpStatus.OK)
   async signInLocal(@Body() loginDTO: LoginDTO): Promise<Tokens> {
     try {
@@ -56,9 +56,13 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('/refresh')
   @HttpCode(HttpStatus.OK)
-  async refreshTokens() {
+  async refreshTokens(@Req() req: Request) {
     try {
-      return await this.authService.refreshTokens();
+      const user = req.user;
+      return await this.authService.refreshTokens(
+        user['id'],
+        user['refreshToken'],
+      );
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
