@@ -97,4 +97,8 @@ export class UsersService implements UsersServiceInterface {
     });
     return foundUser;
   }
+  async getUserById(userId: string): Promise<User> {
+    const foundUser = await this.usersRepository.findOneById(userId);
+    return foundUser;
+  }
 }
