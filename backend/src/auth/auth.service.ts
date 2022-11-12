@@ -5,6 +5,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginDTO } from './dto/login.dto';
 import { Tokens } from './dto/tokens.dto';
 import { IAuthService } from './interfaces/AuthService.interface';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService implements IAuthService {
   constructor(
@@ -16,17 +17,17 @@ export class AuthService implements IAuthService {
     const { email, password } = loginDto;
     const user = await this.usersService.getUserByEmail(email);
     if (!user) throw new ForbiddenException('Invalid credentials');
-    const isPasswordValid = user.validatePassword(password);
+    const isPasswordValid = await user.validatePassword(password);
     if (!isPasswordValid) throw new ForbiddenException('Invalid credentials');
     const tokens = await this.getTokens(user.id, user.email);
-    this.updateRefreshToken(user.id, tokens.refresh_token);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
     return tokens;
   }
 
   async signUpLocal(createUserDto: CreateUserDto): Promise<Tokens> {
     const newUser = await this.usersService.create(createUserDto);
     const tokens = await this.getTokens(newUser.id, newUser.email);
-    this.updateRefreshToken(newUser.id, tokens.refresh_token);
+    await this.updateRefreshToken(newUser.id, tokens.refresh_token);
     return tokens;
   }
 
@@ -55,13 +56,25 @@ export class AuthService implements IAuthService {
   async logout(userId: string) {
     await this.updateRefreshToken(userId, null);
   }
-  async refreshTokens() {}
+  async refreshTokens(userId: string, refreshToken: string) {
+    const user = await this.usersService.getUserById(userId);
+    if (!user) throw new ForbiddenException('Invalid credentials');
+    const refreshTokenMatch = await bcrypt.compare(
+      refreshToken,
+      user.hashedRefreshToken,
+    );
+    if (!refreshTokenMatch) throw new ForbiddenException('Invalid credentials');
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
+    return tokens;
+  }
   private async updateRefreshToken(
     userId: string,
     refreshToken: string,
   ): Promise<void> {
-    const user = await this.usersService.findOne(userId);
+    const user = await this.usersService.getUserById(userId);
     user.hashedRefreshToken = refreshToken;
     await this.usersService.update(user.id, user);
+    return;
   }
 }
