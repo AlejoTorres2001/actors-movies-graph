@@ -35,16 +35,21 @@ export class User {
   @Exclude()
   @AutoMap()
   public hashedRefreshToken?: string;
-  @BeforeUpdate()
   @BeforeInsert()
+  @BeforeUpdate()
   async hashRefreshToken() {
-    const salt = await bcrypt.genSalt(10);
-    this.hashedRefreshToken = this.hashedRefreshToken
-      ? await bcrypt.hash(this.hashedRefreshToken, salt)
-      : null;
-    console.log(this.hashedRefreshToken);
+    if (this.hashedRefreshToken) {
+      const salt = await bcrypt.genSalt(10);
+      this.hashedRefreshToken = await bcrypt.hash(
+        this.hashedRefreshToken,
+        salt,
+      );
+    }
   }
   async validatePassword(password: string): Promise<boolean> {
     return await bcrypt.compare(password, this.password);
+  }
+  async validateRefreshToken(refreshToken: string): Promise<boolean> {
+    return await bcrypt.compare(refreshToken, this.hashedRefreshToken);
   }
 }
