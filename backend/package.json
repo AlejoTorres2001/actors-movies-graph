@@ -43,6 +43,7 @@
     "@nestjs/swagger": "^6.1.2",
     "@nestjs/typeorm": "^9.0.1",
     "apollo-server-express": "^3.10.2",
+    "argon2": "^0.30.2",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
