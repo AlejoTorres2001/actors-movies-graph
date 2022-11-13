@@ -18,7 +18,13 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: true,
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? process.env.PROD_DOMAIN
+        : [
+            `http://${process.env.DEV_DOMAIN}:4200`,
+            `http://${process.env.DEV_DOMAIN}:3000`,
+          ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
   const config = new DocumentBuilder()
