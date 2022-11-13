@@ -14,8 +14,4 @@ export class ReadUserDto {
   @AutoMap()
   @IsAscii()
   username: string;
-  @ApiProperty({ required: true })
-  @AutoMap()
-  @IsAscii()
-  hashedRefreshToken: string;
 }
