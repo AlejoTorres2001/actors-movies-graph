@@ -72,7 +72,7 @@ export class AuthController {
   async logout(
     @GetCurrentUser('id') userId: string,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<void> {
     try {
       await this.authService.logout(userId);
       res.clearCookie('refresh_token', { httpOnly: true });
@@ -95,7 +95,7 @@ export class AuthController {
     @GetCurrentUser('id') userId: string,
     @GetCurrentUser('refreshToken') refreshToken: string,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<Partial<Tokens>> {
     try {
       const tokens: Tokens = await this.authService.refreshTokens(
         userId,
