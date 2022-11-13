@@ -8,7 +8,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiHeaders } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiHeaders,
+  ApiResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { GetCurrentUser, Public } from 'src/shared/decorators';
 import { RefreshTokenGuard } from 'src/shared/guards';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -37,12 +42,6 @@ export class AuthController {
   }
   @Public()
   @Post('local/signin')
-  @ApiHeaders([
-    {
-      name: 'Authorization',
-      description: 'Bearer access_token',
-    },
-  ])
   @HttpCode(HttpStatus.OK)
   async signInLocal(@Body() loginDTO: LoginDTO): Promise<Tokens> {
     try {
@@ -69,6 +68,7 @@ export class AuthController {
   @Public()
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
+  @ApiOkResponse({ type: Tokens })
   @ApiHeaders([
     {
       name: 'Authorization',
