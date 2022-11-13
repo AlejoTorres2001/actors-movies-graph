@@ -26,8 +26,6 @@ export class AuthService implements AuthServiceInterface {
 
   async signUpLocal(createUserDto: CreateUserDto): Promise<ReadUserDto> {
     const newUser = await this.usersService.create(createUserDto);
-    const tokens = await this.getTokens(newUser.id, newUser.email);
-    await this.updateRefreshToken(newUser.id, tokens.refresh_token);
     return newUser;
   }
 

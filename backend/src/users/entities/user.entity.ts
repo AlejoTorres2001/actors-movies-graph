@@ -34,7 +34,6 @@ export class User {
   @Exclude()
   @AutoMap()
   public hashedRefreshToken?: string;
-  @BeforeInsert()
   @BeforeUpdate()
   async hashRefreshToken() {
     if (this.hashedRefreshToken) {
