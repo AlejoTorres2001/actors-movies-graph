@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import * as bcrypt from 'bcrypt';
+import * as argon from 'argon2';
 import { IsAlphanumeric, IsEmail, MinLength } from 'class-validator';
 import {
   BeforeInsert,
@@ -23,13 +23,12 @@ export class User {
   @IsAlphanumeric()
   username: string;
   @MinLength(8)
-  @Column({ type: 'varchar', length: 70 })
+  @Column({ type: 'varchar', length: 255 })
   @AutoMap()
   password: string;
   @BeforeInsert()
   async hashPassword() {
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = await argon.hash(this.password);
   }
   @Column({ nullable: true })
   @Exclude()
@@ -39,17 +38,13 @@ export class User {
   @BeforeUpdate()
   async hashRefreshToken() {
     if (this.hashedRefreshToken) {
-      const salt = await bcrypt.genSalt(10);
-      this.hashedRefreshToken = await bcrypt.hash(
-        this.hashedRefreshToken,
-        salt,
-      );
+      this.hashedRefreshToken = await argon.hash(this.hashedRefreshToken);
     }
   }
   async validatePassword(password: string): Promise<boolean> {
-    return await bcrypt.compare(password, this.password);
+    return await argon.verify(this.password, password);
   }
   async validateRefreshToken(refreshToken: string): Promise<boolean> {
-    return await bcrypt.compare(refreshToken, this.hashedRefreshToken);
+    return await argon.verify(this.hashedRefreshToken, refreshToken);
   }
 }
