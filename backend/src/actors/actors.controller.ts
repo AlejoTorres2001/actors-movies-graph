@@ -34,7 +34,6 @@ import { Actor } from './entities/actor.entity';
 import { ActorsServiceInterface } from './interfaces/actors.service.interface';
 @ApiTags('actors')
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
 @Controller('/api/actors')
 export class ActorsController {
   constructor(
