@@ -6,14 +6,11 @@ import {
   HttpStatus,
   InternalServerErrorException,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiHeaders,
-  ApiResponse,
-  ApiOkResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiHeaders, ApiOkResponse } from '@nestjs/swagger';
+import { Response } from 'express';
 import { GetCurrentUser, Public } from 'src/shared/decorators';
 import { RefreshTokenGuard } from 'src/shared/guards';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -43,9 +40,23 @@ export class AuthController {
   @Public()
   @Post('local/signin')
   @HttpCode(HttpStatus.OK)
-  async signInLocal(@Body() loginDTO: LoginDTO): Promise<Tokens> {
+  async signInLocal(
+    @Body() loginDTO: LoginDTO,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<Partial<Tokens>> {
     try {
-      return await this.authService.signInLocal(loginDTO);
+      const tokens: Tokens = await this.authService.signInLocal(loginDTO);
+      res.cookie('refresh_token', tokens.refresh_token, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        domain:
+          process.env.NODE_ENV === 'production'
+            ? process.env.PROD_DOMAIN
+            : process.env.DEV_DOMAIN,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      return { access_token: tokens.access_token };
     } catch (error) {
       throw error;
     }
@@ -79,9 +90,24 @@ export class AuthController {
   async refreshTokens(
     @GetCurrentUser('id') userId: string,
     @GetCurrentUser('refreshToken') refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
   ) {
     try {
-      return await this.authService.refreshTokens(userId, refreshToken);
+      const tokens: Tokens = await this.authService.refreshTokens(
+        userId,
+        refreshToken,
+      );
+      res.cookie('refresh_token', tokens.refresh_token, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        domain:
+          process.env.NODE_ENV === 'production'
+            ? process.env.PROD_DOMAIN
+            : process.env.DEV_DOMAIN,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      return { access_token: tokens.access_token };
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
