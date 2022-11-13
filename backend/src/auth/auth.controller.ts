@@ -6,14 +6,13 @@ import {
   HttpStatus,
   InternalServerErrorException,
   Post,
-  Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
+import { ApiTags, ApiHeaders } from '@nestjs/swagger';
+import { GetCurrentUser, Public } from 'src/shared/decorators';
+import { RefreshTokenGuard } from 'src/shared/guards';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-
+import { ReadUserDto } from 'src/users/dto/read-user.dto';
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';
 import { Tokens } from './dto/tokens.dto';
@@ -21,9 +20,12 @@ import { Tokens } from './dto/tokens.dto';
 @Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+  @Public()
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
-  async signUpLocal(@Body() createUserDto: CreateUserDto): Promise<Tokens> {
+  async signUpLocal(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<ReadUserDto> {
     try {
       return await this.authService.signUpLocal(createUserDto);
     } catch (error) {
@@ -33,7 +35,14 @@ export class AuthController {
       throw new InternalServerErrorException(error);
     }
   }
+  @Public()
   @Post('local/signin')
+  @ApiHeaders([
+    {
+      name: 'Authorization',
+      description: 'Bearer access_token',
+    },
+  ])
   @HttpCode(HttpStatus.OK)
   async signInLocal(@Body() loginDTO: LoginDTO): Promise<Tokens> {
     try {
@@ -42,27 +51,37 @@ export class AuthController {
       throw error;
     }
   }
-  @UseGuards(AuthGuard('jwt'))
-  @Post('/logout')
+  @Post('logout')
+  @ApiHeaders([
+    {
+      name: 'Authorization',
+      description: 'Bearer access_token',
+    },
+  ])
   @HttpCode(HttpStatus.OK)
-  async logout(@Req() req: Request) {
-    const user = req.user;
+  async logout(@GetCurrentUser('id') userId: string) {
     try {
-      return await this.authService.logout(user['userId']);
+      return await this.authService.logout(userId);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
-  @UseGuards(AuthGuard('jwt-refresh'))
-  @Post('/refresh')
+  @Public()
+  @UseGuards(RefreshTokenGuard)
+  @Post('refresh')
+  @ApiHeaders([
+    {
+      name: 'Authorization',
+      description: 'Bearer refresh_token',
+    },
+  ])
   @HttpCode(HttpStatus.OK)
-  async refreshTokens(@Req() req: Request) {
+  async refreshTokens(
+    @GetCurrentUser('id') userId: string,
+    @GetCurrentUser('refreshToken') refreshToken: string,
+  ) {
     try {
-      const user = req.user;
-      return await this.authService.refreshTokens(
-        user['id'],
-        user['refreshToken'],
-      );
+      return await this.authService.refreshTokens(userId, refreshToken);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

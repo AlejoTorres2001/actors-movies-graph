@@ -4,10 +4,10 @@ import { UsersServiceInterface } from 'src/users/interfaces/users.service.interf
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginDTO } from './dto/login.dto';
 import { Tokens } from './dto/tokens.dto';
-import { IAuthService } from './interfaces/AuthService.interface';
-import * as bcrypt from 'bcrypt';
+import { AuthServiceInterface } from './interfaces/AuthService.interface';
+import { ReadUserDto } from 'src/users/dto/read-user.dto';
 @Injectable()
-export class AuthService implements IAuthService {
+export class AuthService implements AuthServiceInterface {
   constructor(
     @Inject('UsersServiceInterface')
     private readonly usersService: UsersServiceInterface,
@@ -24,11 +24,11 @@ export class AuthService implements IAuthService {
     return tokens;
   }
 
-  async signUpLocal(createUserDto: CreateUserDto): Promise<Tokens> {
+  async signUpLocal(createUserDto: CreateUserDto): Promise<ReadUserDto> {
     const newUser = await this.usersService.create(createUserDto);
     const tokens = await this.getTokens(newUser.id, newUser.email);
     await this.updateRefreshToken(newUser.id, tokens.refresh_token);
-    return tokens;
+    return newUser;
   }
 
   async getTokens(userId: string, email: string) {
@@ -36,14 +36,14 @@ export class AuthService implements IAuthService {
       this.jwtService.signAsync(
         { userId, email },
         {
-          expiresIn: '30s',
+          expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME,
           secret: process.env.JWT_SECRET,
         },
       ),
       this.jwtService.signAsync(
         { userId, email },
         {
-          expiresIn: '1h',
+          expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION,
           secret: process.env.JWT_REFRESH_TOKEN_SECRET,
         },
       ),
@@ -58,11 +58,9 @@ export class AuthService implements IAuthService {
   }
   async refreshTokens(userId: string, refreshToken: string) {
     const user = await this.usersService.getUserById(userId);
-    if (!user) throw new ForbiddenException('Invalid credentials');
-    const refreshTokenMatch = await bcrypt.compare(
-      refreshToken,
-      user.hashedRefreshToken,
-    );
+    if (!user || !user.hashRefreshToken)
+      throw new ForbiddenException('Invalid credentials');
+    const refreshTokenMatch = await user.validateRefreshToken(refreshToken);
     if (!refreshTokenMatch) throw new ForbiddenException('Invalid credentials');
     const tokens = await this.getTokens(user.id, user.email);
     await this.updateRefreshToken(user.id, tokens.refresh_token);
