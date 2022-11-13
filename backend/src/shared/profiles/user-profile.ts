@@ -20,6 +20,7 @@ export class UserProfile extends AutomapperProfile {
         CreateUserDto,
         User,
         forMember((dest) => dest.id, ignore()),
+        forMember((dest) => dest.hashRefreshToken, ignore()),
       );
       createMap(mapper, UpdateUserDto, User);
     };
