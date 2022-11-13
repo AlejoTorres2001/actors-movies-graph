@@ -49,12 +49,12 @@ export class AuthController {
       res.cookie('refresh_token', tokens.refresh_token, {
         httpOnly: true,
         sameSite: 'none',
-        secure: true,
+        //secure: true, //!disable if testing on postman
         domain:
           process.env.NODE_ENV === 'production'
             ? process.env.PROD_DOMAIN
             : process.env.DEV_DOMAIN,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRATION),
       });
       return { access_token: tokens.access_token };
     } catch (error) {
@@ -69,9 +69,13 @@ export class AuthController {
     },
   ])
   @HttpCode(HttpStatus.OK)
-  async logout(@GetCurrentUser('id') userId: string) {
+  async logout(
+    @GetCurrentUser('id') userId: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     try {
-      return await this.authService.logout(userId);
+      await this.authService.logout(userId);
+      res.clearCookie('refresh_token', { httpOnly: true });
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -100,12 +104,12 @@ export class AuthController {
       res.cookie('refresh_token', tokens.refresh_token, {
         httpOnly: true,
         sameSite: 'none',
-        secure: true,
+        //secure: true, //!disable if testing on postman
         domain:
           process.env.NODE_ENV === 'production'
             ? process.env.PROD_DOMAIN
             : process.env.DEV_DOMAIN,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRATION),
       });
       return { access_token: tokens.access_token };
     } catch (error) {
