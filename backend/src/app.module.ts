@@ -9,7 +9,7 @@ import { ApiLog } from './shared/entities/api-log.entity';
 import { LoggingInterceptor } from './shared/interceptors/logger.interceptor';
 import { ApiTimeOutInterceptor } from './shared/interceptors/api-timeout.interceptor';
 import { Exception } from './shared/entities/exception.entity';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AllExceptionsFilter } from './shared/exceptions/exceptions-filter';
 import { dataSourceOptions } from 'db/data-source';
 import configuration from '../config/configuration';
@@ -19,6 +19,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { AccessTokenGuard } from './shared/guards';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -55,6 +56,10 @@ import { AuthModule } from './auth/auth.module';
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
     },
   ],
 })
