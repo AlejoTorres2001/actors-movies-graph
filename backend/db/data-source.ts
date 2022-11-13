@@ -3,7 +3,7 @@ import configuration from '../config/configuration';
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   ...configuration(),
-  entities: ['dist/**/*.entity.js'],
+  entities: [__dirname + '/../**/*.entity.{js,ts}'],
   migrations: ['dist/db/migrations/**.js'],
   ssl: true,
   extra: {
