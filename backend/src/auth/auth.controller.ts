@@ -48,8 +48,8 @@ export class AuthController {
       const tokens: Tokens = await this.authService.signInLocal(loginDTO);
       res.cookie('refresh_token', tokens.refresh_token, {
         httpOnly: true,
-        sameSite: 'none',
-        //secure: true, //!disable if testing on postman
+        sameSite: 'strict',
+        secure: true, //!disable if testing on postman
         domain:
           process.env.NODE_ENV === 'production'
             ? process.env.PROD_DOMAIN
@@ -103,8 +103,8 @@ export class AuthController {
       );
       res.cookie('refresh_token', tokens.refresh_token, {
         httpOnly: true,
-        sameSite: 'none',
-        //secure: true, //!disable if testing on postman
+        sameSite: 'strict',
+        secure: true, //!disable if testing on postman
         domain:
           process.env.NODE_ENV === 'production'
             ? process.env.PROD_DOMAIN
