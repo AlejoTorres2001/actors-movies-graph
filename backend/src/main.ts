@@ -2,13 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { json, urlencoded } from 'express';
+import { json } from 'express';
 import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   app.use(json({ limit: '50mb' }));
-  app.use(urlencoded({ limit: '50mb', extended: true }));
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -26,6 +25,9 @@ async function bootstrap() {
             `http://${process.env.DEV_DOMAIN}:3000`,
           ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    allowedHeaders:
+      'Content-Type, Accept, Authorization, X-Requested-With,  Origin, Access-Control-Request-Method, Access-Control-Request-Headers',
   });
   const config = new DocumentBuilder()
     .setTitle('Nest API')
