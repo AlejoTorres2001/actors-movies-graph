@@ -29,4 +29,9 @@ export class LoginComponent {
       });
     }
   }
+  refresh() {
+    this.authService.refresh().subscribe(() => {
+      this.router.navigateByUrl('/');
+    });
+  }
 }
