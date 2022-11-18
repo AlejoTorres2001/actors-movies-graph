@@ -1,6 +1,6 @@
 import { ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { IndexPage } from './pages/index/index.component';
+import { IndexPage } from './pages/index/index.page';
 const routes: Routes = [
   {
     path: '',
