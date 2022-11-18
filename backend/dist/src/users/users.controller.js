@@ -29,6 +29,9 @@ let UsersController = class UsersController {
             return await this.usersService.create(createUserDto);
         }
         catch (error) {
+            if (error.code === '23505') {
+                throw new common_1.ConflictException('Username already exists');
+            }
             throw new common_1.InternalServerErrorException(error);
         }
     }

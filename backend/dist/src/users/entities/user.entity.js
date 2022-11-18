@@ -11,16 +11,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const classes_1 = require("@automapper/classes");
-const bcrypt = require("bcrypt");
+const argon = require("argon2");
 const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
+const class_transformer_1 = require("class-transformer");
 let User = class User {
     async hashPassword() {
-        const salt = await bcrypt.genSalt();
-        this.password = await bcrypt.hash(this.password, salt);
+        this.password = await argon.hash(this.password);
+    }
+    async hashRefreshToken() {
+        if (this.hashedRefreshToken) {
+            this.hashedRefreshToken = await argon.hash(this.hashedRefreshToken);
+        }
     }
     async validatePassword(password) {
-        return await bcrypt.compare(password, this.password);
+        return await argon.verify(this.password, password);
+    }
+    async validateRefreshToken(refreshToken) {
+        return await argon.verify(this.hashedRefreshToken, refreshToken);
     }
 };
 __decorate([
@@ -37,12 +45,12 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ unique: true }),
     (0, classes_1.AutoMap)(),
-    (0, class_validator_1.IsAscii)(),
+    (0, class_validator_1.IsAlphanumeric)(),
     __metadata("design:type", String)
 ], User.prototype, "username", void 0);
 __decorate([
     (0, class_validator_1.MinLength)(8),
-    (0, typeorm_1.Column)({ type: 'varchar', length: 70 }),
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255 }),
     (0, classes_1.AutoMap)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
@@ -52,6 +60,18 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], User.prototype, "hashPassword", null);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    (0, class_transformer_1.Exclude)(),
+    (0, classes_1.AutoMap)(),
+    __metadata("design:type", String)
+], User.prototype, "hashedRefreshToken", void 0);
+__decorate([
+    (0, typeorm_1.BeforeUpdate)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], User.prototype, "hashRefreshToken", null);
 User = __decorate([
     (0, typeorm_1.Entity)({ name: 'users' })
 ], User);

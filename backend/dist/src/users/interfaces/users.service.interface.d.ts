@@ -2,7 +2,8 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { ReadUserDto } from '../dto/read-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UsersQueryDto } from '../dto/users-query.dto';
-export interface UsersServiceInterface {
+import { UserAuthServiceInterface } from './users.auth.service.interface';
+export interface UsersServiceInterface extends UserAuthServiceInterface {
     create(creteUserDto: CreateUserDto): Promise<ReadUserDto>;
     findAll(actorsQueryDto: UsersQueryDto): Promise<ReadUserDto[]>;
     findOne(id: string): Promise<ReadUserDto>;

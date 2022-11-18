@@ -5,10 +5,11 @@ const app_module_1 = require("./app.module");
 const swagger_1 = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const express_1 = require("express");
+const cookieParser = require("cookie-parser");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    app.use(cookieParser());
     app.use((0, express_1.json)({ limit: '50mb' }));
-    app.use((0, express_1.urlencoded)({ limit: '50mb', extended: true }));
     app.useGlobalPipes(new common_1.ValidationPipe({
         transform: true,
         transformOptions: {
@@ -16,8 +17,15 @@ async function bootstrap() {
         },
     }));
     app.enableCors({
-        origin: true,
+        origin: process.env.NODE_ENV === 'production'
+            ? process.env.PROD_DOMAIN
+            : [
+                `http://${process.env.DEV_DOMAIN}:4200`,
+                `http://${process.env.DEV_DOMAIN}:3000`,
+            ],
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        credentials: true,
+        allowedHeaders: 'Content-Type, Accept, Authorization, X-Requested-With,  Origin, Access-Control-Request-Method, Access-Control-Request-Headers',
     });
     const config = new swagger_1.DocumentBuilder()
         .setTitle('Nest API')

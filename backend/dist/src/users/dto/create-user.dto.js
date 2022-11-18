@@ -30,7 +30,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)({ required: true }),
     (0, classes_1.AutoMap)(),
-    (0, class_validator_1.IsAscii)(),
+    (0, class_validator_1.IsAlphanumeric)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "username", void 0);
 exports.CreateUserDto = CreateUserDto;

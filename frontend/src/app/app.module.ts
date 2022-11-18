@@ -4,10 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeComponent } from '../components/home/home.component';
-import { LoginComponent } from '../components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PrivateRequestInterceptor } from 'src/shared/interceptors/private-request.interceptor';
+import { PrivateRequestInterceptor } from 'src/app/shared/interceptors/private-request.interceptor';
 @NgModule({
   declarations: [AppComponent, HomeComponent, LoginComponent],
   imports: [

@@ -23,7 +23,7 @@ import { AccessTokenGuard } from './shared/guards';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'front'),
+      rootPath: join(__dirname, '..', '/front'),
     }),
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
@@ -37,7 +37,7 @@ import { AccessTokenGuard } from './shared/guards';
     TypeOrmModule.forRootAsync({ useFactory: () => dataSourceOptions }),
     ActorsModule,
     AppearancesModule,
-    GraphsModule,
+    //GraphsModule,
     TypeOrmModule.forFeature([ApiLog]),
     TypeOrmModule.forFeature([Exception]),
     UsersModule,

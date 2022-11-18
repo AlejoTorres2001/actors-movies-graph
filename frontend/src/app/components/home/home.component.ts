@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { take } from 'rxjs';
-import { Actor } from 'src/models/actor.model';
-import { ActorService } from 'src/services/actors.service';
+import { Actor } from 'src/app/shared/models/actor.model';
+import { ActorService } from 'src/app/shared/services/actors.service';
 
 @Component({
   selector: 'app-home',

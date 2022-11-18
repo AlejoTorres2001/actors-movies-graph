@@ -2,7 +2,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { shareReplay } from 'rxjs';
 
-import { PrivateAPIHttpClient, PublicAPIHttpClient } from 'src/shared/api';
+import { PrivateAPIHttpClient, PublicAPIHttpClient } from 'src/app/shared/api';
 
 @Injectable({
   providedIn: 'root',

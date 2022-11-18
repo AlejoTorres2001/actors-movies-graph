@@ -31,6 +31,7 @@ UsersModule = __decorate([
             },
             user_profile_1.UserProfile,
         ],
+        exports: ['UsersServiceInterface'],
     })
 ], UsersModule);
 exports.UsersModule = UsersModule;

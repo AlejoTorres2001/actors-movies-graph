@@ -41,7 +41,6 @@ let UsersService = class UsersService {
                 skip: offset,
                 take: limit,
             });
-        console.log(foundUser);
         return this.classMapper.mapArray(foundUser, user_entity_1.User, read_user_dto_1.ReadUserDto);
     }
     async findOne(id) {
@@ -65,6 +64,22 @@ let UsersService = class UsersService {
     async createMany(users) {
         const newUsers = this.usersRepository.createMany(users);
         return this.classMapper.mapArray(await this.usersRepository.saveMany(newUsers), user_entity_1.User, read_user_dto_1.ReadUserDto);
+    }
+    async getUserByUserName(username) {
+        const foundUser = await this.usersRepository.findByCondition({
+            where: { username },
+        });
+        return foundUser;
+    }
+    async getUserByEmail(email) {
+        const foundUser = await this.usersRepository.findByCondition({
+            where: { email },
+        });
+        return foundUser;
+    }
+    async getUserById(userId) {
+        const foundUser = await this.usersRepository.findOneById(userId);
+        return foundUser;
     }
 };
 UsersService = __decorate([

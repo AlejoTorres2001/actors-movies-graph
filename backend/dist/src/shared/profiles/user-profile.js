@@ -27,7 +27,7 @@ let UserProfile = class UserProfile extends nestjs_1.AutomapperProfile {
     get profile() {
         return (mapper) => {
             (0, core_1.createMap)(mapper, user_entity_1.User, read_user_dto_1.ReadUserDto);
-            (0, core_1.createMap)(mapper, create_user_dto_1.CreateUserDto, user_entity_1.User, (0, core_1.forMember)((dest) => dest.id, (0, core_1.ignore)()));
+            (0, core_1.createMap)(mapper, create_user_dto_1.CreateUserDto, user_entity_1.User, (0, core_1.forMember)((dest) => dest.id, (0, core_1.ignore)()), (0, core_1.forMember)((dest) => dest.hashRefreshToken, (0, core_1.ignore)()));
             (0, core_1.createMap)(mapper, update_user_dto_1.UpdateUserDto, user_entity_1.User);
         };
     }
