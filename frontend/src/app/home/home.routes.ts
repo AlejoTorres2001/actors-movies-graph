@@ -1,13 +1,13 @@
 import { ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { IndexPage } from './pages/index/index.component';
 const routes: Routes = [
   {
     path: '',
     children: [
       {
         path: '',
-        component: DashboardComponent,
+        component: IndexPage,
       },
       { path: '**', redirectTo: '' },
     ],
