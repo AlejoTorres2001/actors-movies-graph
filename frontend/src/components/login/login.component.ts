@@ -24,7 +24,7 @@ export class LoginComponent {
     const val = this.form.value;
 
     if (val.email && val.password) {
-      this.authService.login(val.email, val.password).subscribe(() => {
+      this.authService.signin(val.email, val.password).subscribe(() => {
         this.router.navigateByUrl('/');
       });
     }

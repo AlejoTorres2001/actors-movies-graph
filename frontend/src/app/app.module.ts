@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from '../components/home/home.component';
 import { LoginComponent } from '../components/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PrivateAPIHttpClient } from 'src/shared/api/private-client';
 import { PrivateRequestInterceptor } from 'src/shared/interceptors/private-request.interceptor';
 @NgModule({
   declarations: [AppComponent, HomeComponent, LoginComponent],
