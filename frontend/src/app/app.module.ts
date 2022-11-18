@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from '../components/home/home.component';
 import { LoginComponent } from '../components/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PrivateAPIHttpClient } from 'src/shared/api/private-client';
+import { PrivateRequestInterceptor } from 'src/shared/interceptors/private-request.interceptor';
 @NgModule({
   declarations: [AppComponent, HomeComponent, LoginComponent],
   imports: [
@@ -15,7 +17,13 @@ import { ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: PrivateRequestInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
