@@ -16,8 +16,6 @@ import { HomeModule } from './home/home.module';
     RouterModule,
     HttpClientModule,
     ReactiveFormsModule,
-    AuthModule,
-    HomeModule,
   ],
   providers: [
     {

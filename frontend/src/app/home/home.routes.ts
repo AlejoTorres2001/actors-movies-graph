@@ -4,14 +4,10 @@ import { IndexPage } from './pages/index/index.page';
 const routes: Routes = [
   {
     path: '',
-    children: [
-      {
-        path: '',
-        component: IndexPage,
-      },
-      { path: '**', redirectTo: '' },
-    ],
+    component: IndexPage,
+    pathMatch: 'full',
   },
+  { path: '**', redirectTo: '' },
 ];
 export const RoutingModule: ModuleWithProviders<RouterModule> =
   RouterModule.forChild(routes);
