@@ -9,20 +9,15 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiHeaders,
-  ApiOkResponse,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiHeaders, ApiOkResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { GetCurrentUser, Public } from 'src/shared/decorators';
 import { RefreshTokenGuard } from 'src/shared/guards';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { ReadUserDto } from 'src/users/dto/read-user.dto';
 import { AuthService } from './auth.service';
-import { AccessToken } from './dto/access-token.dto';
 import { LoginDTO } from './dto/login.dto';
+import { SignInOutput } from './dto/signInOutput.dto';
 import { Tokens } from './dto/tokens.dto';
 @ApiTags('auth')
 @Controller('api/auth')
@@ -46,17 +41,18 @@ export class AuthController {
   @Public()
   @Post('local/signin')
   @ApiOkResponse({
-    description: 'Returns the access token',
-    type: AccessToken,
+    description: 'Returns the access token and user data',
+    type: SignInOutput,
   })
   @HttpCode(HttpStatus.OK)
   async signInLocal(
     @Body() loginDTO: LoginDTO,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<AccessToken> {
+  ): Promise<Omit<SignInOutput, 'refresh_token'>> {
     try {
-      const tokens: Tokens = await this.authService.signInLocal(loginDTO);
-      res.cookie('refresh_token', tokens.refresh_token, {
+      const { refresh_token, ...responseData }: SignInOutput =
+        await this.authService.signInLocal(loginDTO);
+      res.cookie('refresh_token', refresh_token, {
         httpOnly: true,
         sameSite: 'strict',
         secure: true, //!disable if testing on postman
@@ -66,9 +62,7 @@ export class AuthController {
             : process.env.DEV_DOMAIN,
         maxAge: parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRATION),
       });
-      return {
-        access_token: tokens.access_token,
-      };
+      return responseData;
     } catch (error) {
       throw error;
     }

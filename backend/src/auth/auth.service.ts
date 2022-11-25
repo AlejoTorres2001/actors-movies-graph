@@ -6,14 +6,19 @@ import { LoginDTO } from './dto/login.dto';
 import { Tokens } from './dto/tokens.dto';
 import { AuthServiceInterface } from './interfaces/AuthService.interface';
 import { ReadUserDto } from 'src/users/dto/read-user.dto';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { User } from 'src/users/entities/user.entity';
+import { SignInOutput } from './dto/signInOutput.dto';
 @Injectable()
 export class AuthService implements AuthServiceInterface {
   constructor(
     @Inject('UsersServiceInterface')
     private readonly usersService: UsersServiceInterface,
     private readonly jwtService: JwtService,
+    @InjectMapper() private readonly classMapper: Mapper,
   ) {}
-  async signInLocal(loginDto: LoginDTO): Promise<Tokens> {
+  async signInLocal(loginDto: LoginDTO): Promise<SignInOutput> {
     const { email, password } = loginDto;
     const user = await this.usersService.getUserByEmail(email);
     if (!user) throw new ForbiddenException('Invalid credentials');
@@ -21,7 +26,7 @@ export class AuthService implements AuthServiceInterface {
     if (!isPasswordValid) throw new ForbiddenException('Invalid credentials');
     const tokens = await this.getTokens(user.id, user.email);
     await this.updateRefreshToken(user.id, tokens.refresh_token);
-    return tokens;
+    return { ...tokens, ...this.classMapper.map(user, User, ReadUserDto) };
   }
 
   async signUpLocal(createUserDto: CreateUserDto): Promise<ReadUserDto> {
