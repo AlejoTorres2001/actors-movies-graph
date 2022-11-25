@@ -12,7 +12,6 @@ export class AuthEffects {
     private readonly router: Router
   ) {}
   loginRequest$ = createEffect(() => {
-    AuthActions.loginPending();
     return this.actions$.pipe(
       ofType(AuthActions.loginRequest),
       exhaustMap(action =>
