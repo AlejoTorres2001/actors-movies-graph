@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-
+import { Store } from '@ngrx/store';
+import { AuthState } from 'src/app/shared/state/auth/auth.reducer';
+import { isLoginPending } from 'src/app/shared/state/auth/auth.selectors';
+import * as AuthActions from '../../../shared/state/auth/auth.actions';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -10,10 +11,11 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginPage {
   form: FormGroup;
+
+  isLoginPending$ = this.store.select(isLoginPending);
   constructor(
-    private readonly fb: FormBuilder,
-    private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly store: Store<AuthState>,
+    private readonly fb: FormBuilder
   ) {
     this.form = this.fb.group({
       email: ['', Validators.required],
@@ -21,17 +23,12 @@ export class LoginPage {
     });
   }
   login() {
-    const val = this.form.value;
-
-    if (val.email && val.password) {
-      this.authService.signin(val.email, val.password).subscribe(() => {
-        this.router.navigateByUrl('/');
-      });
-    }
+    const formValue = this.form.value;
+    const credentials = {
+      email: formValue.email,
+      password: formValue.password,
+    };
+    this.store.dispatch(AuthActions.loginRequest({ credentials }));
   }
-  refresh() {
-    this.authService.refresh().subscribe(() => {
-      this.router.navigateByUrl('/');
-    });
-  }
+  refresh() {}
 }
