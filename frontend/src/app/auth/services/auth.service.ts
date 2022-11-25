@@ -1,8 +1,9 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { shareReplay } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 
 import { PrivateAPIHttpClient, PublicAPIHttpClient } from 'src/app/shared/api';
+import { AuthLoginResponse } from 'src/app/shared/models/authLoginResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -21,13 +22,16 @@ export class AuthService {
       })
       .pipe(shareReplay());
   }
-  signin(email: string, password: string) {
-    return this.publicHttpClient
-      .Request('POST', '/auth/local/signin', {} as HttpHeaders, {
+  signin(email: string, password: string): Observable<AuthLoginResponse> {
+    return this.publicHttpClient.Request(
+      'POST',
+      '/auth/local/signin',
+      {} as HttpHeaders,
+      {
         email,
         password,
-      })
-      .pipe(shareReplay());
+      }
+    );
   }
   refresh() {
     return this.privateHttpClient
