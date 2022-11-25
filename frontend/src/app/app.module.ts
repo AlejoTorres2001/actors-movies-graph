@@ -7,15 +7,22 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PrivateRequestInterceptor } from 'src/app/shared/interceptors/private-request.interceptor';
 import { StoreModule } from '@ngrx/store';
 import { RouterModule } from '@angular/router';
+import { authReducer } from './shared/state/auth/auth.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './shared/state/auth/auth.effects';
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     RoutingModule,
+
     RouterModule,
     HttpClientModule,
     ReactiveFormsModule,
-    StoreModule,
+    StoreModule.forRoot({
+      auth: authReducer,
+    }),
+    EffectsModule.forRoot([AuthEffects]),
   ],
   providers: [
     {

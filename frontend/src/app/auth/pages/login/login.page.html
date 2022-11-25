@@ -15,3 +15,4 @@
     <button class="button button-primary" (click)="refresh()">Refresh</button>
   </div>
 </form>
+<div *ngIf="isLoginPending$ | async">Loading...</div>
