@@ -4,13 +4,15 @@ import { LoginUser } from '../../models/loginUser.model';
 
 export const loginRequest = createAction(
   '[Auth] Login Request',
-  props<LoginUser>()
+  props<{ credentials: LoginUser }>()
 );
 export const loginSuccess = createAction(
   '[Auth] Login Success',
-  props<AuthLoginResponse>()
+  props<{ loginSuccessResponse: AuthLoginResponse }>()
 );
-export const loginFailed = createAction(
+export const loginFailure = createAction(
   '[Auth] Login Failure',
   props<{ error: string }>()
 );
+
+export const loginPending = createAction('[Auth] Login Pending');
