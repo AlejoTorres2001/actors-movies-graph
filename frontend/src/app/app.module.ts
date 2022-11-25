@@ -5,9 +5,8 @@ import { RoutingModule } from './app.routing';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PrivateRequestInterceptor } from 'src/app/shared/interceptors/private-request.interceptor';
-import { AuthModule } from './auth/auth.module';
+import { StoreModule } from '@ngrx/store';
 import { RouterModule } from '@angular/router';
-import { HomeModule } from './home/home.module';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -16,6 +15,7 @@ import { HomeModule } from './home/home.module';
     RouterModule,
     HttpClientModule,
     ReactiveFormsModule,
+    StoreModule,
   ],
   providers: [
     {
