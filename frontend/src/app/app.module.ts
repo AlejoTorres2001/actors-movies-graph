@@ -10,12 +10,13 @@ import { RouterModule } from '@angular/router';
 import { authReducer } from './shared/state/auth/auth.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './shared/state/auth/auth.effects';
+import { SharedModule } from './shared/shared.module';
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     RoutingModule,
-
+    SharedModule,
     RouterModule,
     HttpClientModule,
     ReactiveFormsModule,
