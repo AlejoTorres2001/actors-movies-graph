@@ -7,6 +7,9 @@ import {
   logoutFailure,
   logoutRequest,
   logoutSuccess,
+  refreshTokenFailure,
+  refreshTokenRequest,
+  refreshTokenSuccess,
 } from './auth.actions';
 
 export interface AuthState {
@@ -65,6 +68,18 @@ export const authReducer = createReducer(
     return {
       ...state,
       loginError: error,
+    };
+  }),
+  on(refreshTokenSuccess, (state, { accessToken }) => {
+    return {
+      ...state,
+      access_token: accessToken,
+    };
+  }),
+  on(refreshTokenFailure, state => {
+    return {
+      ...state,
+      ...initialState,
     };
   })
 );

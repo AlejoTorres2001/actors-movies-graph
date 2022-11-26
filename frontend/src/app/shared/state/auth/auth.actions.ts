@@ -16,10 +16,19 @@ export const loginFailure = createAction(
 );
 
 export const loginPending = createAction('[Auth] Login Pending');
-
 export const logoutRequest = createAction('[Auth] Logout Request');
 export const logoutSuccess = createAction('[Auth] Logout Success');
 export const logoutFailure = createAction(
   '[Auth] Logout Failure',
+  props<{ error: string }>()
+);
+
+export const refreshTokenRequest = createAction('[Auth] Refresh Token Request');
+export const refreshTokenSuccess = createAction(
+  '[Auth] Refresh Token Success',
+  props<{ accessToken: string }>()
+);
+export const refreshTokenFailure = createAction(
+  '[Auth] Refresh Token Failure',
   props<{ error: string }>()
 );

@@ -11,6 +11,19 @@ export class AuthEffects {
     private _authService: AuthService,
     private readonly router: Router
   ) {}
+  refreshTokenRequest$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthActions.refreshTokenRequest),
+      exhaustMap(() =>
+        this._authService.refresh().pipe(
+          map(res =>
+            AuthActions.refreshTokenSuccess({ accessToken: res.access_token })
+          ),
+          catchError(error => of(AuthActions.refreshTokenFailure({ error })))
+        )
+      )
+    );
+  });
   logoutRequest$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AuthActions.logoutRequest),
