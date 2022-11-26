@@ -15,10 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
+const read_user_dto_1 = require("../users/dto/read-user.dto");
+const nestjs_1 = require("@automapper/nestjs");
+const user_entity_1 = require("../users/entities/user.entity");
 let AuthService = class AuthService {
-    constructor(usersService, jwtService) {
+    constructor(usersService, jwtService, classMapper) {
         this.usersService = usersService;
         this.jwtService = jwtService;
+        this.classMapper = classMapper;
     }
     async signInLocal(loginDto) {
         const { email, password } = loginDto;
@@ -30,7 +34,7 @@ let AuthService = class AuthService {
             throw new common_1.ForbiddenException('Invalid credentials');
         const tokens = await this.getTokens(user.id, user.email);
         await this.updateRefreshToken(user.id, tokens.refresh_token);
-        return tokens;
+        return Object.assign(Object.assign({}, tokens), this.classMapper.map(user, user_entity_1.User, read_user_dto_1.ReadUserDto));
     }
     async signUpLocal(createUserDto) {
         const newUser = await this.usersService.create(createUserDto);
@@ -76,7 +80,8 @@ let AuthService = class AuthService {
 AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)('UsersServiceInterface')),
-    __metadata("design:paramtypes", [Object, jwt_1.JwtService])
+    __param(2, (0, nestjs_1.InjectMapper)()),
+    __metadata("design:paramtypes", [Object, jwt_1.JwtService, Object])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map

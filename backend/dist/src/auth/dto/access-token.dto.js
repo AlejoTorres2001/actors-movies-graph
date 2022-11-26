@@ -9,13 +9,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Tokens = void 0;
+exports.AccessToken = void 0;
 const swagger_1 = require("@nestjs/swagger");
-class Tokens {
+class AccessToken {
 }
 __decorate([
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], Tokens.prototype, "access_token", void 0);
-exports.Tokens = Tokens;
-//# sourceMappingURL=tokens.dto.js.map
+    (0, swagger_1.ApiProperty)({
+        type: 'string',
+    }),
+    __metadata("design:type", Object)
+], AccessToken.prototype, "access_token", void 0);
+exports.AccessToken = AccessToken;
+//# sourceMappingURL=access-token.dto.js.map

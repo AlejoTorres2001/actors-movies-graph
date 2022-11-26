@@ -1,3 +1,6 @@
+@angular/animations
+MIT
+
 @angular/common
 MIT
 
@@ -11,6 +14,15 @@ MIT
 MIT
 
 @angular/router
+MIT
+
+@ngrx/effects
+MIT
+
+@ngrx/store
+MIT
+
+primeng
 MIT
 
 rxjs

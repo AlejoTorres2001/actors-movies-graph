@@ -11,6 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
@@ -20,6 +31,7 @@ const guards_1 = require("../shared/guards");
 const create_user_dto_1 = require("../users/dto/create-user.dto");
 const auth_service_1 = require("./auth.service");
 const login_dto_1 = require("./dto/login.dto");
+const signInOutput_dto_1 = require("./dto/signInOutput.dto");
 const tokens_dto_1 = require("./dto/tokens.dto");
 let AuthController = class AuthController {
     constructor(authService) {
@@ -38,8 +50,8 @@ let AuthController = class AuthController {
     }
     async signInLocal(loginDTO, res) {
         try {
-            const tokens = await this.authService.signInLocal(loginDTO);
-            res.cookie('refresh_token', tokens.refresh_token, {
+            const _a = await this.authService.signInLocal(loginDTO), { refresh_token } = _a, responseData = __rest(_a, ["refresh_token"]);
+            res.cookie('refresh_token', refresh_token, {
                 httpOnly: true,
                 sameSite: 'strict',
                 secure: true,
@@ -48,7 +60,7 @@ let AuthController = class AuthController {
                     : process.env.DEV_DOMAIN,
                 maxAge: parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRATION),
             });
-            return { access_token: tokens.access_token };
+            return responseData;
         }
         catch (error) {
             throw error;
@@ -94,6 +106,10 @@ __decorate([
 __decorate([
     (0, decorators_1.Public)(),
     (0, common_1.Post)('local/signin'),
+    (0, swagger_1.ApiOkResponse)({
+        description: 'Returns the access token and user data',
+        type: signInOutput_dto_1.SignInOutput,
+    }),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
