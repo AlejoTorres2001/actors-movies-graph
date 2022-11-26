@@ -33,10 +33,8 @@ export class AuthService {
       }
     );
   }
-  refresh() {
-    return this.privateHttpClient
-      .Request('POST', '/auth/refresh')
-      .pipe(shareReplay());
+  refresh(): Observable<{ access_token: string }> {
+    return this.privateHttpClient.Request('POST', '/auth/refresh');
   }
   logout() {
     return this.privateHttpClient.Request('POST', '/auth/logout');
