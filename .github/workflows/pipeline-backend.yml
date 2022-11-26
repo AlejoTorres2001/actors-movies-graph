@@ -45,16 +45,3 @@ jobs:
         run: npm install --no-audit --no-fund --no-optional
       - name: Lint
         run: npm run lint:backend
-  deploy:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Deploy to Heroku
-        if: ${{ github.event_name == 'push' }}
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{secrets.HEROKU_APP_NAME_BACKEND}}
-          heroku_email: ${{secrets.HEROKU_EMAIL}}
