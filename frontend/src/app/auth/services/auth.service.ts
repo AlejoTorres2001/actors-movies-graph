@@ -39,8 +39,6 @@ export class AuthService {
       .pipe(shareReplay());
   }
   logout() {
-    return this.privateHttpClient
-      .Request('POST', '/auth/logut')
-      .pipe(shareReplay());
+    return this.privateHttpClient.Request('POST', '/auth/logout');
   }
 }

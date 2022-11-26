@@ -13,6 +13,7 @@
   <div class="form-buttons">
     <button class="button button-primary" (click)="login()">Login</button>
     <button class="button button-primary" (click)="refresh()">Refresh</button>
+    <button class="button button-primary" (click)="logout()">LogOut</button>
   </div>
 </form>
 <div *ngIf="isLoginPending$ | async">Loading...</div>

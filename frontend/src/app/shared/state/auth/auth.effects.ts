@@ -11,6 +11,17 @@ export class AuthEffects {
     private _authService: AuthService,
     private readonly router: Router
   ) {}
+  logoutRequest$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthActions.logoutRequest),
+      exhaustMap(action =>
+        this._authService.logout().pipe(
+          map(res => AuthActions.logoutSuccess()),
+          catchError(error => of(AuthActions.logoutFailure({ error })))
+        )
+      )
+    );
+  });
   loginRequest$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AuthActions.loginRequest),

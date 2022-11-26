@@ -31,4 +31,7 @@ export class LoginPage {
     this.store.dispatch(AuthActions.loginRequest({ credentials }));
   }
   refresh() {}
+  logout() {
+    this.store.dispatch(AuthActions.logoutRequest());
+  }
 }
